@@ -238,8 +238,7 @@ signed portBASE_TYPE xReturn;
 /*
  * UART RX interrupt service routine.
  */
-//OLD: interrupt (UART1RX_VECTOR) wakeup vRxISR( void )
-interrupt (USCI_A1_VECTOR) wakeup vRxISR( void )
+interrupt (UART1RX_VECTOR) wakeup vRxISR( void )
 {
 signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
@@ -264,8 +263,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 /*
  * UART Tx interrupt service routine.
  */
-//OLD: interrupt (UART1TX_VECTOR) wakeup vTxISR( void )
-interrupt (USCI_A0_VECTOR) wakeup vTxISR( void )
+interrupt (UART1TX_VECTOR) wakeup vTxISR( void )
 {
 signed char cChar;
 portBASE_TYPE xTaskWoken = pdFALSE;

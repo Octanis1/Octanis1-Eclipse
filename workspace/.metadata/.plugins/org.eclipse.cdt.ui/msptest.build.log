@@ -1,0 +1,43 @@
+23:01:08 **** Incremental Build of configuration Debug for project msptest ****
+make all 
+Building file: ../serial/serial.c
+Invoking: MSP430 C Compiler
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/msp430/include -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/portable/GCC/MSP430F449 -I"/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/workspace/msptest" -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Demo/Common/include -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "serial/serial.o" "../serial/serial.c"
+Finished building: ../serial/serial.c
+ 
+Building file: ../ParTest/ParTest.c
+Invoking: MSP430 C Compiler
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/msp430/include -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/portable/GCC/MSP430F449 -I"/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/workspace/msptest" -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Demo/Common/include -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "ParTest/ParTest.o" "../ParTest/ParTest.c"
+In file included from ../ParTest/ParTest.c:82:0:
+/usr/local/msp430-toolchain/bin/../lib/gcc/msp430/4.7.0/../../../../msp430/include/signal.h:43:2: warning: #warning msp430-libc <signal.h> deprecated, using <legacymsp430.h> [-Wcpp]
+../ParTest/ParTest.c: In function 'vParTestInitialise':
+../ParTest/ParTest.c:134:2: error: 'BTCTL' undeclared (first use in this function)
+../ParTest/ParTest.c:134:2: note: each undeclared identifier is reported only once for each function it appears in
+../ParTest/ParTest.c:144:2: error: 'LCDM1' undeclared (first use in this function)
+../ParTest/ParTest.c:145:2: error: 'LCDM2' undeclared (first use in this function)
+../ParTest/ParTest.c:146:2: error: 'LCDM3' undeclared (first use in this function)
+../ParTest/ParTest.c:147:2: error: 'LCDM4' undeclared (first use in this function)
+../ParTest/ParTest.c:148:2: error: 'LCDM5' undeclared (first use in this function)
+../ParTest/ParTest.c:149:2: error: 'LCDM6' undeclared (first use in this function)
+../ParTest/ParTest.c:150:2: error: 'LCDM7' undeclared (first use in this function)
+../ParTest/ParTest.c:151:2: error: 'LCDM8' undeclared (first use in this function)
+../ParTest/ParTest.c:152:2: error: 'LCDM9' undeclared (first use in this function)
+../ParTest/ParTest.c:153:2: error: 'LCDM10' undeclared (first use in this function)
+../ParTest/ParTest.c:154:2: error: 'LCDM11' undeclared (first use in this function)
+../ParTest/ParTest.c:155:2: error: 'LCDM12' undeclared (first use in this function)
+../ParTest/ParTest.c:156:2: error: 'LCDM13' undeclared (first use in this function)
+../ParTest/ParTest.c:157:2: error: 'LCDM14' undeclared (first use in this function)
+../ParTest/ParTest.c:158:2: error: 'LCDM15' undeclared (first use in this function)
+../ParTest/ParTest.c:159:2: error: 'LCDM16' undeclared (first use in this function)
+../ParTest/ParTest.c:160:2: error: 'LCDM17' undeclared (first use in this function)
+../ParTest/ParTest.c:161:2: error: 'LCDM18' undeclared (first use in this function)
+../ParTest/ParTest.c:162:2: error: 'LCDM19' undeclared (first use in this function)
+../ParTest/ParTest.c:163:2: error: 'LCDM20' undeclared (first use in this function)
+../ParTest/ParTest.c:166:2: error: 'LCDCTL' undeclared (first use in this function)
+../ParTest/ParTest.c:166:12: error: 'LCDSG0_7' undeclared (first use in this function)
+../ParTest/ParTest.c:166:21: error: 'LCD4MUX' undeclared (first use in this function)
+../ParTest/ParTest.c:166:29: error: 'LCDON' undeclared (first use in this function)
+make: *** [ParTest/ParTest.o] Error 1
+
+23:01:09 Build Finished (took 287ms)
+

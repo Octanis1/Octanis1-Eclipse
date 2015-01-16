@@ -16,14 +16,14 @@ OBJS += \
 %.o: ../%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: MSP430 C Compiler'
-	msp430-gcc -I/usr/msp430/include -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/portable/GCC/MSP430F449 -I"/home/raffael/workspace/msptest" -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Demo/Common/include -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "$@" "$<"
+	/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/msp430/include -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/portable/GCC/MSP430F449 -I"/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/workspace/msptest" -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Demo/Common/include -I/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
 oldmain.o: ../oldmain.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: MSP430 C Compiler'
-	msp430-gcc -I/usr/msp430/include -I/usr/include/FreeRTOSV8.1.2 -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "$@" "$<"
+	/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/msp430/include -I/usr/include/FreeRTOSV8.1.2 -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

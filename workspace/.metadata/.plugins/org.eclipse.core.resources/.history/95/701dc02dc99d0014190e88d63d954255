@@ -158,7 +158,6 @@ unsigned long ulBaudRateCount;
 		sTHREEmpty = pdTRUE;
 
 		/* Enable interrupts. */
-		//OLD: IE2 |= URXIE1 + UTXIE1;
 		UCA1IE |= UCRXIE + UCTXIE;
 	}
 	portEXIT_CRITICAL();
@@ -199,8 +198,7 @@ signed portBASE_TYPE xReturn;
 			there are no characters queued to be transmitted - so we can
 			write the character directly to the shift Tx register. */
 			sTHREEmpty = pdFALSE;
-			//OLD: U1TXBUF = cOutChar;
-			UCA1TXBUF = cOutChar;
+			U1TXBUF = cOutChar;
 			xReturn = pdPASS;
 		}
 		else
@@ -224,8 +222,7 @@ signed portBASE_TYPE xReturn;
 				/* Get back the character we just posted. */
 				xQueueReceive( xCharsForTx, &cOutChar, serNO_BLOCK );
 				sTHREEmpty = pdFALSE;
-				//OLD: U1TXBUF = cOutChar;
-				UCA1TXBUF = cOutChar;
+				U1TXBUF = cOutChar;
 			}
 		}
 	}
@@ -238,16 +235,14 @@ signed portBASE_TYPE xReturn;
 /*
  * UART RX interrupt service routine.
  */
-//OLD: interrupt (UART1RX_VECTOR) wakeup vRxISR( void )
-interrupt (USCI_A1_VECTOR) wakeup vRxISR( void )
+interrupt (UART1RX_VECTOR) wakeup vRxISR( void )
 {
 signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Get the character from the UART and post it on the queue of Rxed 
 	characters. */
-	//OLD: cChar = U1RXBUF;
-	cChar = UCA1RXBUF;
+	cChar = U1RXBUF;
 
 	xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 
@@ -264,8 +259,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 /*
  * UART Tx interrupt service routine.
  */
-//OLD: interrupt (UART1TX_VECTOR) wakeup vTxISR( void )
-interrupt (USCI_A0_VECTOR) wakeup vTxISR( void )
+interrupt (UART1TX_VECTOR) wakeup vTxISR( void )
 {
 signed char cChar;
 portBASE_TYPE xTaskWoken = pdFALSE;
@@ -276,8 +270,7 @@ portBASE_TYPE xTaskWoken = pdFALSE;
 	if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWoken ) == pdTRUE )
 	{
 		/* There was another character queued - transmit it now. */
-		//OLD: U1TXBUF = cChar;
-		UCA1TXBUF = cChar;
+		U1TXBUF = cChar;
 	}
 	else
 	{
