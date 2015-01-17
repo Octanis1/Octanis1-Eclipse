@@ -15,7 +15,8 @@ ARCHIVES :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-serial \
 . \
+Source \
+Source/portable/GCC/MSP430F449 \
 ParTest \
 

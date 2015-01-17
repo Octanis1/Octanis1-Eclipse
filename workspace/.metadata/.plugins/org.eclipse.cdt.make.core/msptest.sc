@@ -3,6 +3,7 @@
 <instance id="dk.xpg.msp430eclipse.configuration.app.debug.1153514347;dk.xpg.msp430eclipse.configuration.app.debug.1153514347.;dk.xpg.msp430eclipse.tool.compiler.gcc.512893941;dk.xpg.msp430eclipse.tool.compiler.gcc.input.1809698038">
 <collector id="org.eclipse.cdt.make.core.PerProjectSICollector">
 <includePath path="/usr/msp430/include" removed="true"/>
+<includePath path="/usr/include/FreeRTOSV8.1.2" removed="true"/>
 <includePath path="/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/portable/GCC/MSP430F449" removed="true"/>
 <includePath path="/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/workspace/msptest"/>
 <includePath path="/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Demo/Common/include" removed="true"/>
@@ -192,6 +193,7 @@
 <instance id="dk.xpg.msp430eclipse.configuration.app.debug.1153514347;dk.xpg.msp430eclipse.configuration.app.debug.1153514347.;dk.xpg.msp430eclipse.tool.compiler.gcc.512893941;dk.xpg.msp430eclipse.tool.compiler.gcc.input.cc.549446441">
 <collector id="org.eclipse.cdt.make.core.PerProjectSICollector">
 <includePath path="/usr/msp430/include" removed="true"/>
+<includePath path="/usr/include/FreeRTOSV8.1.2" removed="true"/>
 <includePath path="/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/portable/GCC/MSP430F449" removed="true"/>
 <includePath path="/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/workspace/msptest"/>
 <includePath path="/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Demo/Common/include" removed="true"/>
@@ -749,6 +751,7 @@
 <instance id="dk.xpg.msp430eclipse.configuration.app.debug.1153514347;dk.xpg.msp430eclipse.configuration.app.debug.1153514347.854748136;dk.xpg.msp430eclipse.tool.compiler.gcc.512893941.2084197569;dk.xpg.msp430eclipse.tool.compiler.gcc.input.1958350006">
 <collector id="org.eclipse.cdt.make.core.PerProjectSICollector">
 <includePath path="/usr/msp430/include" removed="true"/>
+<includePath path="/usr/include/FreeRTOSV8.1.2" removed="true"/>
 <includePath path="/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/portable/GCC/MSP430F449" removed="true"/>
 <includePath path="/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/workspace/msptest"/>
 <includePath path="/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Demo/Common/include" removed="true"/>
@@ -938,6 +941,7 @@
 <instance id="dk.xpg.msp430eclipse.configuration.app.debug.1153514347;dk.xpg.msp430eclipse.configuration.app.debug.1153514347.854748136;dk.xpg.msp430eclipse.tool.compiler.gcc.512893941.2084197569;dk.xpg.msp430eclipse.tool.compiler.gcc.input.cc.1315907477">
 <collector id="org.eclipse.cdt.make.core.PerProjectSICollector">
 <includePath path="/usr/msp430/include" removed="true"/>
+<includePath path="/usr/include/FreeRTOSV8.1.2" removed="true"/>
 <includePath path="/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/portable/GCC/MSP430F449" removed="true"/>
 <includePath path="/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/workspace/msptest"/>
 <includePath path="/opt/octanis1/FreeRTOSV8.1.2/FreeRTOS/Demo/Common/include" removed="true"/>

@@ -8,7 +8,8 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include serial/subdir.mk
+-include Source/portable/GCC/MSP430F449/subdir.mk
+-include Source/subdir.mk
 -include ParTest/subdir.mk
 -include subdir.mk
 -include objects.mk

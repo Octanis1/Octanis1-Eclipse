@@ -99,7 +99,7 @@ and off to generate '*' characters. */
 
 /* The LED number of the real on board LED, rather than a simulated LED. */
 #define partstON_BOARD_LED		( ( unsigned portBASE_TYPE ) 10 )
-#define mainON_BOARD_LED_BIT	( ( unsigned char ) 0x01 )
+#define mainON_BOARD_LED_BIT	( ( unsigned char ) BIT6 )
 
 /* The LCD segments used to generate the '*' characters for LED's 0 to 5. */
 unsigned char * const ucRHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa4, 
@@ -125,10 +125,14 @@ static void prvToggleOnBoardLED( void );
 
 void vParTestInitialise( void )
 {
+	P4DIR |= BIT6 + BIT7;
+	P4OUT &= ~BIT7; //ground pin
+
+
 	/* Initialise the LCD hardware. */
 
 	/* Used for the onboard LED. */
-	P1DIR = 0x01;
+	/*REMOVED: P1DIR = 0x01;
 
 	// Setup Basic Timer for LCD operation
 	BTCTL = (LCD_DIV_64+0x23);
@@ -138,10 +142,10 @@ void vParTestInitialise( void )
 	P2SEL = 0x00;
 	P3SEL = 0x00;
 	P4SEL = 0xFC;
-	P5SEL = 0xFF;
+	P5SEL = 0xFF;*/
 	
 	/* Initialise all segments to off. */
-	LCDM1 = partstSEGMENTS_OFF;	
+	/*REMOVED: LCDM1 = partstSEGMENTS_OFF;
 	LCDM2 = partstSEGMENTS_OFF;	
 	LCDM3 = partstSEGMENTS_OFF;	
 	LCDM4 = partstSEGMENTS_OFF;	
@@ -163,7 +167,7 @@ void vParTestInitialise( void )
 	LCDM20 = partstSEGMENTS_OFF;	
 
 	/* Setup LCD control. */
-	LCDCTL = (LCDSG0_7|LCD4MUX|LCDON);
+	//REMOVED: LCDCTL = (LCDSG0_7|LCD4MUX|LCDON);
 }
 /*-----------------------------------------------------------*/
 
@@ -194,33 +198,10 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if( uxLED < ( portBASE_TYPE ) partstNUM_LEDS )
-	{
-		vTaskSuspendAll();
-		{
-			/* If the '*' is already showing - hide it.  If it is not already
-			showing then show it. */
-			if( *( ucRHSSegments[ uxLED ] ) )
-			{
-				*( ucRHSSegments[ uxLED ] ) = partstSEGMENTS_OFF;
-				*( ucLHSSegments[ uxLED ] ) = partstSEGMENTS_OFF;
-			}
-			else
-			{
-				*( ucRHSSegments[ uxLED ] ) = partstSEGMENTS_ON;
-				*( ucLHSSegments[ uxLED ] ) = partstSEGMENTS_ON;
-			}
-		}
-		xTaskResumeAll();
-	}
-	else
-	{
-		if( uxLED == partstON_BOARD_LED )
-		{
+
+
 			/* The request related to the genuine on board LED. */
 			prvToggleOnBoardLED();
-		}
-	}	
 }
 /*-----------------------------------------------------------*/
 
@@ -231,11 +212,11 @@ static unsigned short sState = pdFALSE;
 	/* Toggle the state of the single genuine on board LED. */
 	if( sState )	
 	{
-		P1OUT |= mainON_BOARD_LED_BIT;
+		P4OUT |= mainON_BOARD_LED_BIT;
 	}
 	else
 	{
-		P1OUT &= ~mainON_BOARD_LED_BIT;
+		P4OUT &= ~mainON_BOARD_LED_BIT;
 	}
 
 	sState = !sState;

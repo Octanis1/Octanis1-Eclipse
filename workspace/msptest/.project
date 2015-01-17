@@ -24,4 +24,16 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>dk.xpg.msp430eclipse.msp430nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>MSP430F449</name>
+			<type>2</type>
+			<location>/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/lib/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source/portable/GCC/MSP430F449</location>
+		</link>
+		<link>
+			<name>Source</name>
+			<type>2</type>
+			<location>/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/lib/octanis1/FreeRTOSV8.1.2/FreeRTOS/Source</location>
+		</link>
+	</linkedResources>
 </projectDescription>

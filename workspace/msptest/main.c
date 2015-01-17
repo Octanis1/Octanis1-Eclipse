@@ -110,8 +110,8 @@
 
 /* Constants that define the LED's used by the various tasks. [in this case
 the '*' characters on the LCD represent LED's] */
-#define mainCHECK_LED			( 4 )
-#define mainCOM_TEST_LED		( 10 )
+#define mainCHECK_LED			( 4 ) //TODO: Adapt this
+#define mainCOM_TEST_LED		( 10 )//TODO: Adapt this
 
 /* Demo task priorities. */
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
@@ -120,7 +120,8 @@ the '*' characters on the LCD represent LED's] */
 #define mainLED_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
 
 /* Baud rate used by the COM test tasks. */
-#define mainCOM_TEST_BAUD_RATE			( ( unsigned long ) 19200 )
+//OLD #define mainCOM_TEST_BAUD_RATE			( ( unsigned long ) 19200 )
+#define mainCOM_TEST_BAUD_RATE			( ( unsigned long ) 9600 )
 
 /* The frequency at which the 'Check' tasks executes.  See the comments at the 
 top of the page.  When the system is operating error free the 'Check' task
@@ -156,22 +157,54 @@ static volatile unsigned long ulIdleLoops = 0UL;
 /*
  * Start the demo application tasks - then start the real time scheduler.
  */
+
+
 int main( void )
 {
-	/* Setup the hardware ready for the demo. */
-	prvSetupHardware();
-	vParTestInitialise();
+volatile unsigned long ul; /* volatile so it is not optimized away. */
 
-	/* Start the standard demo application tasks. */
+    /* Initialise the LED outputs - note that prvSetupHardware() might also
+    have to be called! */
+    vParTestInitialise();
+
+    /* Toggle the LEDs repeatedly. */
+    for( ;; )
+    {
+        /* We don't want to use the RTOS features yet, so just use a very
+        crude delay mechanism instead. */
+        for( ul = 0; ul < 0xfffff; ul++ )
+        {
+        }
+
+        /* Toggle the first four LEDs (on the assumption there are at least
+        4 fitted. */
+        vParTestToggleLED( 0 );/*
+        vParTestToggleLED( 1 );
+        vParTestToggleLED( 2 );
+        vParTestToggleLED( 3 );*/
+    }
+
+    return 0;
+}
+
+
+
+int oldmain2( void )
+{
+	/* Setup the hardware ready for the demo.
+	prvSetupHardware();
+	//REMOVED(LCD not needed): vParTestInitialise();
+
+	/* Start the standard demo application tasks.
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 
-	/* Start the 'Check' task which is defined in this file. */
+	/* Start the 'Check' task which is defined in this file.
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
 
-	/* Start the scheduler. */
+	/* Start the scheduler.
 	vTaskStartScheduler();
 
 	/* As the scheduler has been started the demo applications tasks will be
@@ -186,12 +219,12 @@ static volatile unsigned long ulDummyVariable = 3UL;
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error. */
+	operating without error.
 	for( ;; )
 	{
 		/* Wait until it is time to check again.  The time we wait here depends
 		on whether an error has been detected or not.  When an error is 
-		detected the time is shortened resulting in a faster LED flash rate. */
+		detected the time is shortened resulting in a faster LED flash rate.
 		vTaskDelay( xDelayPeriod );
 
 		/* Perform a bit of 32bit maths to ensure the registers used by the 
@@ -199,21 +232,20 @@ TickType_t xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 		themselves. The result here is not important we are just deliberately
 		changing registers used by other tasks to ensure that their context
 		switch is operating as required. - see the demo application 
-		documentation for more info. */
+		documentation for more info.
 		ulDummyVariable *= 3UL;
 		
-		/* See if the other tasks are all ok. */
+		/* See if the other tasks are all ok.
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
 		{
 			/* An error occurred in one of the tasks so shorten the delay 
 			period - which has the effect of increasing the frequency of the
-			LED toggle. */
+			LED toggle.
 			xDelayPeriod = mainERROR_CHECK_DELAY;
 		}
 
-		/* Flash! */
-		vParTestToggleLED( mainCHECK_LED );
-	}
+
+	}*/
 }
 /*-----------------------------------------------------------*/
 
@@ -227,7 +259,7 @@ static unsigned long ulLastIdleLoops = 0UL;
 	checks the counts maintained by the tasks to ensure they are still being
 	incremented.  A count remaining at the same value between calls therefore
 	indicates that an error has been detected.  Only tasks that do not flash
-	an LED are checked. */
+	an LED are checked.
 
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
@@ -249,7 +281,7 @@ static unsigned long ulLastIdleLoops = 0UL;
 		sNoErrorFound = pdFALSE;
 	}
 
-	ulLastIdleLoops = ulIdleLoops;
+	ulLastIdleLoops = ulIdleLoops;*/
 	
 	return sNoErrorFound;
 }
@@ -269,12 +301,12 @@ static void prvSetupHardware( void )
 	/* (121+1) x 32768 x 2 = 7.99 Mhz */
 	//REMOVED: SCFQCTL = mainMAX_FREQUENCY;
 
-	/* Setup the IO as per the SoftBaugh demo for the same target hardware. */
+	/* Setup the IO as per the SoftBaugh demo for the same target hardware.
 	P1SEL = 0x32;
 	P2SEL = 0x00;
 	P3SEL = 0x00;
 	P4SEL = 0xFC;
-	P5SEL = 0xFF;
+	P5SEL = 0xFF;*/
 }
 /*-----------------------------------------------------------*/
 

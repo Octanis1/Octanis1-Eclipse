@@ -179,3 +179,9 @@ Binding(COMMAND+SHIFT+G,
 
 !ENTRY org.eclipse.linuxtools.rpm.ui.editor 2 127 2015-01-15 22:03:38.183
 !MESSAGE Return value of process was non-zero value 127. This may mean output is not accurate.
+
+!ENTRY org.eclipse.cdt.core 1 0 2015-01-17 12:20:44.990
+!MESSAGE Indexed 'mspf449demo' (0 sources, 0 headers) in 0 sec: 0 declarations; 0 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2015-01-17 14:04:44.463
+!MESSAGE Indexed 'mspdemo' (0 sources, 0 headers) in 0 sec: 0 declarations; 0 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
