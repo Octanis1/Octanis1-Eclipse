@@ -1,0 +1,2 @@
+Problem: Eclipse shows errors of variable names that could not been resolved, even though the header file containing the definition is included. 
+Solution: Click Project -> C/C++ Index -> Rebuild 

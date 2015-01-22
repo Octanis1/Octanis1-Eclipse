@@ -70,7 +70,7 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-#include <msp430x44x.h>
+#include "msp430f5529.h"
 
 /*-----------------------------------------------------------
  * Application specific definitions.

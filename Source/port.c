@@ -85,7 +85,7 @@
 not the MCLK. */
 #define portACLK_FREQUENCY_HZ			( ( TickType_t ) 32768 )
 #define portINITIAL_CRITICAL_NESTING	( ( uint16_t ) 10 )
-#define portFLAGS_INT_ENABLED	( ( StackType_t ) 0x08 )
+#define portFLAGS_INT_ENABLED	( ( StackType_t ) 0x08 ) //TODO
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
@@ -297,25 +297,25 @@ void vPortYield( void )
 static void prvSetupTimerInterrupt( void )
 {
 	/* Ensure the timer is stopped. */
-	TACTL = 0;
+	TA0CTL = 0;
 
 	/* Run the timer of the ACLK. */
-	TACTL = TASSEL_1;
+	TA0CTL = TASSEL_1;
 
 	/* Clear everything to start with. */
-	TACTL |= TACLR;
+	TA0CTL |= TACLR;
 
 	/* Set the compare match value according to the tick rate we want. */
-	TACCR0 = portACLK_FREQUENCY_HZ / configTICK_RATE_HZ;
+	TA0CCR0 = portACLK_FREQUENCY_HZ / configTICK_RATE_HZ;
 
 	/* Enable the interrupts. */
-	TACCTL0 = CCIE;
+	TA0CCTL0 = CCIE;
 
 	/* Start up clean. */
-	TACTL |= TACLR;
+	TA0CTL |= TACLR;
 
 	/* Up mode. */
-	TACTL |= MC_1;
+	TA0CTL |= MC_1;
 }
 /*-----------------------------------------------------------*/
 
@@ -328,11 +328,15 @@ static void prvSetupTimerInterrupt( void )
 
 	/*
 	 * Tick ISR for preemptive scheduler.  We can use a naked attribute as
-	 * the context is saved at the start of vPortYieldFromTick().  The tick
+	 * the context is saved at the start of prvTickISR().  The tick
 	 * count is incremented after the context is saved.
 	 */
+	/* OLD:
 	interrupt (TIMERA0_VECTOR) prvTickISR( void ) __attribute__ ( ( naked ) );
 	interrupt (TIMERA0_VECTOR) prvTickISR( void )
+	 */
+	interrupt (USCI_A0_VECTOR) prvTickISR( void ) __attribute__ ( ( naked ) );
+	interrupt (USCI_A0_VECTOR) prvTickISR( void ) //TODO: conflicts with TX interrupt in serial.c
 	{
 		/* Save the context of the interrupted task. */
 		portSAVE_CONTEXT();

@@ -1,63 +1,64 @@
-14:36:28 **** Build of configuration Debug for project mspdemo ****
+15:50:16 **** Build of configuration Debug for project mspdemo ****
 make all 
 Building file: ../serial/serial.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "serial/serial.o" "../serial/serial.c"
-In file included from ../serial/serial.c:78:0:
-/usr/local/msp430-toolchain/bin/../lib/gcc/msp430/4.7.0/../../../../msp430/include/signal.h:43:2: warning: #warning msp430-libc <signal.h> deprecated, using <legacymsp430.h> [-Wcpp]
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "serial/serial.o" "../serial/serial.c"
+../serial/serial.c:275:2: warning: "/*" within comment [-Wcomment]
+../serial/serial.c:280:3: warning: "/*" within comment [-Wcomment]
+../serial/serial.c:286:3: warning: "/*" within comment [-Wcomment]
 Finished building: ../serial/serial.c
  
 Building file: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/PollQ.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "Source/PollQ.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/PollQ.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "Source/PollQ.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/PollQ.c"
 Finished building: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/PollQ.c
  
 Building file: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/comtest.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "Source/comtest.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/comtest.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "Source/comtest.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/comtest.c"
 Finished building: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/comtest.c
  
 Building file: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/flash.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "Source/flash.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/flash.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "Source/flash.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/flash.c"
 Finished building: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/flash.c
  
 Building file: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/heap_1.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "Source/heap_1.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/heap_1.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "Source/heap_1.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/heap_1.c"
 /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/heap_1.c: In function 'pvPortMalloc':
 /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/heap_1.c:118:39: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
 Finished building: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/heap_1.c
  
 Building file: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/integer.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "Source/integer.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/integer.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "Source/integer.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/integer.c"
 Finished building: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/integer.c
  
 Building file: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/list.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "Source/list.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/list.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "Source/list.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/list.c"
 Finished building: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/list.c
  
 Building file: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/port.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "Source/port.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/port.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "Source/port.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/port.c"
 In file included from /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/port.c:74:0:
 /usr/local/msp430-toolchain/bin/../lib/gcc/msp430/4.7.0/../../../../msp430/include/signal.h:43:2: warning: #warning msp430-libc <signal.h> deprecated, using <legacymsp430.h> [-Wcpp]
 /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/port.c: In function 'vPortYield':
 /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/port.c:273:6: warning: frame allocation destroys caller register due to 'task' [-Wattributes]
 /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/port.c: In function 'prvTickISR':
-/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/port.c:335:29: warning: frame allocation destroys caller register due to 'task' [-Wattributes]
+/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/port.c:339:29: warning: frame allocation destroys caller register due to 'task' [-Wattributes]
 Finished building: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/port.c
  
 Building file: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/queue.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "Source/queue.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/queue.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "Source/queue.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/queue.c"
 Finished building: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/queue.c
  
 Building file: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/tasks.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "Source/tasks.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/tasks.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "Source/tasks.o" "/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/tasks.c"
 /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/tasks.c: In function 'xTaskGenericCreate':
 /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/tasks.c:553:41: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
 /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/tasks.c:553:19: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
@@ -67,20 +68,21 @@ Finished building: /Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Source/tasks.
  
 Building file: ../ParTest/ParTest.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "ParTest/ParTest.o" "../ParTest/ParTest.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "ParTest/ParTest.o" "../ParTest/ParTest.c"
 In file included from ../ParTest/ParTest.c:86:0:
 /usr/local/msp430-toolchain/bin/../lib/gcc/msp430/4.7.0/../../../../msp430/include/signal.h:43:2: warning: #warning msp430-libc <signal.h> deprecated, using <legacymsp430.h> [-Wcpp]
 Finished building: ../ParTest/ParTest.c
  
 Building file: ../main.c
 Invoking: MSP430 C Compiler
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f449 -std=gnu89 -c -o "main.o" "../main.c"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper -I/usr/local/msp430-toolchain/msp430/include -I/Users/raffael/Desktop/Octanis/Octanis1-Eclipse/Include -O0 -g -Wall -mmcu=msp430f5529 -std=gnu89 -c -o "main.o" "../main.c"
 In file included from ../main.c:98:0:
 /usr/local/msp430-toolchain/bin/../lib/gcc/msp430/4.7.0/../../../../msp430/include/signal.h:43:2: warning: #warning msp430-libc <signal.h> deprecated, using <legacymsp430.h> [-Wcpp]
 Finished building: ../main.c
  
 Building target: mspdemo.elf
 Invoking: MSP430 Linker
-/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper  ./serial/serial.o  ./Source/PollQ.o ./Source/comtest.o ./Source/flash.o ./Source/heap_1.o ./Source/integer.o ./Source/list.o ./Source/port.o ./Source/queue.o ./Source/tasks.o  ./ParTest/ParTest.o  ./main.o  -mmcu=msp430f449 -L/usr/local/msp430-toolchain/msp430/lib -o "mspdemo.elf"
+/usr/local/msp430-toolchain/bin/msp430-gcc-wrapper  ./serial/serial.o  ./Source/PollQ.o ./Source/comtest.o ./Source/flash.o ./Source/heap_1.o ./Source/integer.o ./Source/list.o ./Source/port.o ./Source/queue.o ./Source/tasks.o  ./ParTest/ParTest.o  ./main.o  -mmcu=msp430f5529 -L/usr/local/msp430-toolchain/msp430/lib -o "mspdemo.elf"
+/usr/local/msp430-toolchain/bin/../lib/gcc/msp430/4.7.0/../../../../msp430/bin/ld: Warning: /usr/local/msp430-toolchain/msp430/lib/libc.a(memcpy.o) does not have CPUX target data
 Finished building target: mspdemo.elf
  

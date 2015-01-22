@@ -264,21 +264,26 @@ static void prvSetupHardware( void )
 	/* Stop the watchdog. */
 	WDTCTL = WDTPW + WDTHOLD;
 
+
 	/* Setup DCO+ for ( xtal * D * (N + 1) ) operation. */
-	FLL_CTL0 |= DCOPLUS + XCAP18PF; 
+	//REMOVED: FLL_CTL0 |= DCOPLUS + XCAP18PF;
 
 	/* X2 DCO frequency, 8MHz nominal DCO */
-	SCFI0 |= FN_4;                  
+	//REMOVED: SCFI0 |= FN_4;
 
 	/* (121+1) x 32768 x 2 = 7.99 Mhz */
-	SCFQCTL = mainMAX_FREQUENCY;
 
-	/* Setup the IO as per the SoftBaugh demo for the same target hardware. */
-	P1SEL = 0x32;
+	//REMOVED: SCFQCTL = mainMAX_FREQUENCY;
+
+	/* Setup the IO */
+	P1SEL = 0x00;
 	P2SEL = 0x00;
 	P3SEL = 0x00;
-	P4SEL = 0xFC;
-	P5SEL = 0xFF;
+	P4SEL = 0x00;
+	P5SEL = BIT5 + BIT6; //activate XT1 crystal pins
+	P6SEL = 0x00;
+	//P7SEL = 0x00; (not defined, but should be!!)
+	//P8SEL = 0x00;
 }
 /*-----------------------------------------------------------*/
 
