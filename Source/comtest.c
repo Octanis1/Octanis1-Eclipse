@@ -179,12 +179,12 @@ TickType_t xTimeToWait;
 		{
 			if( xSerialPutChar( xPort, cByteToSend, comNO_BLOCK ) == pdPASS )
 			{
-				vParTestToggleLED( uxBaseLED + comTX_LED_OFFSET );
+				//REMOVED: vParTestToggleLED( uxBaseLED + comTX_LED_OFFSET );
 			}
 		}
 
 		/* Turn the LED off while we are not doing anything. */
-		vParTestSetLED( uxBaseLED + comTX_LED_OFFSET, pdFALSE );
+		//REMOVED: vParTestSetLED( uxBaseLED + comTX_LED_OFFSET, pdFALSE );
 
 		/* We have posted all the characters in the string - wait before
 		re-sending.  Wait a pseudo-random time as this will provide a better
@@ -228,7 +228,7 @@ BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 				until the expected character sequence is about to restart. */
 				if( cByteRxed == cExpectedByte )
 				{
-					vParTestToggleLED( uxBaseLED + comRX_LED_OFFSET );
+					//REMOVED: vParTestToggleLED( uxBaseLED + comRX_LED_OFFSET );
 				}
 				else
 				{
@@ -239,7 +239,7 @@ BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 		}
 
 		/* Turn the LED off while we are not doing anything. */
-		vParTestSetLED( uxBaseLED + comRX_LED_OFFSET, pdFALSE );
+		//REMOVED: vParTestSetLED( uxBaseLED + comRX_LED_OFFSET, pdFALSE );
 
 		/* Did we break out of the loop because the characters were received in
 		an unexpected order?  If so wait here until the character sequence is

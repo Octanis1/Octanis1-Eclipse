@@ -168,12 +168,12 @@ int main( void )
 
 	/* Start the standard demo application tasks. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	//REMOVED: vStartIntegerMathTasks( tskIDLE_PRIORITY );
+	//REMOVED:vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
+	//REMOVED:vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 
 	/* Start the 'Check' task which is defined in this file. */
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
+	//REMOVED:xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -216,7 +216,7 @@ TickType_t xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 		}
 
 		/* Flash! */
-		vParTestToggleLED( mainCHECK_LED );
+		vParTestToggleLED(  );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -282,8 +282,9 @@ static void prvSetupHardware( void )
 	P4SEL = 0x00;
 	P5SEL = BIT5 + BIT6; //activate XT1 crystal pins
 	P6SEL = 0x00;
-	//P7SEL = 0x00; (not defined, but should be!!)
-	//P8SEL = 0x00;
+	P7SEL = 0x00;
+	P8SEL = 0x00;
+
 }
 /*-----------------------------------------------------------*/
 

@@ -147,11 +147,11 @@ UBaseType_t uxLED;
 	{
 		/* Delay for half the flash period then turn the LED on. */
 		vTaskDelayUntil( &xLastFlashTime, xFlashRate );
-		vParTestToggleLED( uxLED );
+		vParTestToggleLED(  );
 
 		/* Delay for half the flash period then turn the LED off. */
 		vTaskDelayUntil( &xLastFlashTime, xFlashRate );
-		vParTestToggleLED( uxLED );
+		vParTestToggleLED(  );
 	}
 } /*lint !e715 !e818 !e830 Function definition must be standard for task creation. */
 

@@ -92,33 +92,9 @@
 /* Demo application includes. */
 #include "partest.h"
 
-/* Constants required to setup the LCD. */
-#define LCD_DIV_64 5
-
-/* Constants required to access the "LED's".  The LED segments are turned on
-and off to generate '*' characters. */
-#define partstNUM_LEDS			( ( unsigned char ) 6 )
-#define partstSEGMENTS_ON		( ( unsigned char ) 0x0f )
-#define partstSEGMENTS_OFF		( ( unsigned char ) 0x00 )
-
 /* The LED number of the real on board LED, rather than a simulated LED. */
-#define partstON_BOARD_LED		( ( unsigned portBASE_TYPE ) 10 )
-#define mainON_BOARD_LED_BIT	( ( unsigned char ) 0x01 )
-
-/* The LCD segments used to generate the '*' characters for LED's 0 to 5. */
-unsigned char * const ucRHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa4, 
-																( unsigned char * )0xa2, 
-																( unsigned char * )0xa0, 
-																( unsigned char * )0x9e,
-																( unsigned char * )0x9c,
-																( unsigned char * )0x9a };
-
-unsigned char * const ucLHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa3, 
-																( unsigned char * )0xa1, 
-																( unsigned char * )0x9f, 
-																( unsigned char * )0x9d,
-																( unsigned char * )0x9b,
-																( unsigned char * )0x99 };
+#define LED_GND					BIT7
+#define LED_PIN					BIT6
 
 /*
  * Toggle the single genuine built in LED.
@@ -129,76 +105,19 @@ static void prvToggleOnBoardLED( void );
 
 void vParTestInitialise( void )
 {
-	/* Initialise the LCD hardware. */
-
 	/* Used for the onboard LED. */
-	P1DIR = 0x01;
+	P4DIR |= BIT6 + BIT7; //the LED annode and cathode
+	P4OUT &= ~LED_GND; //write a zero to the LED ground
 
-
-	// Setup port functions
-	P1SEL = 0x32; //p1.1 p1.4 p1.5
-	P2SEL = 0x00;
-	P3SEL = 0x00;
-	P4SEL = 0x00; //p4.2-7
-	P5SEL = 0x00; //p5.0-7
 
 }
+
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestToggleLED( void )
 {
-	/* Set or clear the output [in this case show or hide the '*' character. */
-	if( uxLED < ( portBASE_TYPE ) partstNUM_LEDS )
-	{
-		vTaskSuspendAll();
-		{
-			if( xValue )
-			{
-				/* Turn on the segments required to show the '*'. */
-				*( ucRHSSegments[ uxLED ] ) = partstSEGMENTS_ON;
-				*( ucLHSSegments[ uxLED ] ) = partstSEGMENTS_ON;
-			}
-			else
-			{
-				/* Turn off all the segments. */
-				*( ucRHSSegments[ uxLED ] ) = partstSEGMENTS_OFF;
-				*( ucLHSSegments[ uxLED ] ) = partstSEGMENTS_OFF;
-			}
-		}
-		xTaskResumeAll();
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
-{
-	if( uxLED < ( portBASE_TYPE ) partstNUM_LEDS )
-	{
-		vTaskSuspendAll();
-		{
-			/* If the '*' is already showing - hide it.  If it is not already
-			showing then show it. */
-			if( *( ucRHSSegments[ uxLED ] ) )
-			{
-				*( ucRHSSegments[ uxLED ] ) = partstSEGMENTS_OFF;
-				*( ucLHSSegments[ uxLED ] ) = partstSEGMENTS_OFF;
-			}
-			else
-			{
-				*( ucRHSSegments[ uxLED ] ) = partstSEGMENTS_ON;
-				*( ucLHSSegments[ uxLED ] ) = partstSEGMENTS_ON;
-			}
-		}
-		xTaskResumeAll();
-	}
-	else
-	{
-		if( uxLED == partstON_BOARD_LED )
-		{
-			/* The request related to the genuine on board LED. */
-			prvToggleOnBoardLED();
-		}
-	}	
+	/* The request related to the genuine on board LED. */
+	prvToggleOnBoardLED();
 }
 /*-----------------------------------------------------------*/
 
@@ -209,11 +128,11 @@ static unsigned short sState = pdFALSE;
 	/* Toggle the state of the single genuine on board LED. */
 	if( sState )	
 	{
-		P1OUT |= mainON_BOARD_LED_BIT;
+		P4OUT |= LED_PIN;
 	}
 	else
 	{
-		P1OUT &= ~mainON_BOARD_LED_BIT;
+		P4OUT &= ~LED_PIN;
 	}
 
 	sState = !sState;
