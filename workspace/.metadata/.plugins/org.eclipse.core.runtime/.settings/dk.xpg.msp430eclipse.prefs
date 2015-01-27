@@ -1,6 +1,0 @@
-TOOL_PROVIDER_AR=dk.xpg.msp430eclipse.toolchain.GenericToolProvider-dk.xpg.toolchain.mac os x.x86_64.2.2
-TOOL_PROVIDER_GCC=dk.xpg.msp430eclipse.toolchain.GenericToolProvider-dk.xpg.toolchain.mac os x.x86_64.2.2
-TOOL_PROVIDER_GDB=dk.xpg.msp430eclipse.toolchain.GenericToolProvider-dk.xpg.toolchain.mac os x.x86_64.2.2
-TOOL_PROVIDER_MSPDEBUG=dk.xpg.msp430eclipse.toolchain.GenericToolProvider-dk.xpg.toolchain.mac os x.x86_64.2.2
-ToolDirectories=/usr/local/msp430-toolchain;/usr/local/msp430-toolchain
-eclipse.preferences.version=1
