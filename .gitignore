@@ -28,6 +28,10 @@
 *.app
 *.elf
 
+#Eclipse project settings
+*.cproject
+*.project
+
 # Directories
 *.metadata
 *RemoteSystemsTempFiles
