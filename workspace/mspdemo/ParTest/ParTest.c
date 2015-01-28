@@ -106,8 +106,10 @@ static void prvToggleOnBoardLED( void );
 void vParTestInitialise( void )
 {
 	/* Used for the onboard LED. */
-	P4DIR |= BIT6 + BIT7; //the LED annode and cathode
+	//P4SEL &= ~(LED_GND + LED_PIN);
+	P4DIR |= (LED_GND + LED_PIN); //the LED annode and cathode
 	P4OUT &= ~LED_GND; //write a zero to the LED ground
+	P4OUT |= LED_PIN; //write a one to led
 
 
 }

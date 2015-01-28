@@ -275,7 +275,7 @@ static void prvSetupHardware( void )
 
 	//REMOVED: SCFQCTL = mainMAX_FREQUENCY;
 
-	/* Setup the IO */
+	/* Setup the IO
 	P1SEL = 0x00;
 	P2SEL = 0x00;
 	P3SEL = 0x00;
@@ -283,7 +283,9 @@ static void prvSetupHardware( void )
 	P5SEL = BIT5 + BIT6; //activate XT1 crystal pins
 	P6SEL = 0x00;
 	P7SEL = 0x00;
-	P8SEL = 0x00;
+	P8SEL = 0x00;*/
+
+	P5SEL |= BIT5 + BIT6; //activate XT1 crystal pins
 
 }
 /*-----------------------------------------------------------*/
