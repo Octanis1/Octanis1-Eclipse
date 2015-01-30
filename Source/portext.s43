@@ -66,40 +66,113 @@
 
     1 tab == 4 spaces!
 */
+#include "msp430.h"
+#include "FreeRTOSConfig.h"
+#include "data_model.h"
 
-#ifndef DATA_MODEL_H
-#define DATA_MODEL_H
+	IMPORT xTaskIncrementTick
+	IMPORT vTaskSwitchContext
+	IMPORT vPortSetupTimerInterrupt
+	IMPORT pxCurrentTCB
+	IMPORT usCriticalNesting
 
-#ifdef __DATA_MODEL_SMALL__
-	#define pushm_x pushm.w
-	#define popm_x popm.w
-	#define push_x push.w
-	#define pop_x pop.w
-	#define mov_x mov.w
-	#define cmp_x cmp.w
-#endif
+	EXPORT vPortTickISR
+	EXPORT vPortYield
+	EXPORT xPortStartScheduler
 
-#ifdef __DATA_MODEL_MEDIUM__
-	#define pushm_x pushm.a
-	#define popm_x popm.a
-	#define push_x pushx.a
-	#define pop_x popx.a
-	#define mov_x mov.w
-	#define cmp_x cmp.w
-#endif
+portSAVE_CONTEXT macro
 
-#ifdef __DATA_MODEL_LARGE__
-	#define pushm_x pushm.a
-	#define popm_x popm.a
-	#define push_x pushx.a
-	#define pop_x popx.a
-	#define mov_x movx.a
-	#define cmp_x cmpx.a
-#endif
+	/* Save the remaining registers. */
+	pushm_x	#12, r15
+	mov.w	&usCriticalNesting, r14
+	push_x r14
+	mov_x	&pxCurrentTCB, r12
+	mov_x	sp, 0( r12 )
+	endm
+/*-----------------------------------------------------------*/
 
-#ifndef pushm_x
-	#error The assembler options must define one of the following symbols: __DATA_MODEL_SMALL__, __DATA_MODEL_MEDIUM__, or __DATA_MODEL_LARGE__
-#endif
+portRESTORE_CONTEXT macro
 
-#endif /* DATA_MODEL_H */
+	mov_x	&pxCurrentTCB, r12
+	mov_x	@r12, sp
+	pop_x	r15
+	mov.w	r15, &usCriticalNesting
+	popm_x	#12, r15
+	pop.w	sr
+	reta
+	endm
+/*-----------------------------------------------------------*/
+
+
+/*
+ * The RTOS tick ISR.
+ *
+ * If the cooperative scheduler is in use this simply increments the tick
+ * count.
+ *
+ * If the preemptive scheduler is in use a context switch can also occur.
+ */
+
+	RSEG CODE
+	EVEN
+
+vPortTickISR:
+
+	/* The sr is not saved in portSAVE_CONTEXT() because vPortYield() needs
+	to save it manually before it gets modified (interrupts get disabled).
+	Entering through this interrupt means the SR is already on the stack, but
+	this keeps the stack frames identical. */
+	push.w sr
+	portSAVE_CONTEXT
+
+	calla	#xTaskIncrementTick
+	cmp.w   #0x0, R12
+    jeq     SkipContextSwitch
+    calla   #vTaskSwitchContext
+SkipContextSwitch:
+	portRESTORE_CONTEXT
+/*-----------------------------------------------------------*/
+
+/*
+ * Manual context switch called by the portYIELD() macro.
+ */
+ 	EVEN
+
+vPortYield:
+
+	/* The sr needs saving before it is modified. */
+	push.w	sr
+
+	/* Now the SR is stacked we can disable interrupts. */
+	dint
+	nop
+
+	/* Save the context of the current task. */
+	portSAVE_CONTEXT
+
+	/* Select the next task to run. */
+	calla	#vTaskSwitchContext
+
+	/* Restore the context of the new task. */
+	portRESTORE_CONTEXT
+/*-----------------------------------------------------------*/
+
+
+/*
+ * Start off the scheduler by initialising the RTOS tick timer, then restoring
+ * the context of the first task.
+ */
+ 	EVEN
+
+xPortStartScheduler:
+
+	/* Setup the hardware to generate the tick.  Interrupts are disabled
+	when this function is called. */
+	calla	#vPortSetupTimerInterrupt
+
+	/* Restore the context of the first task that is going to run. */
+	portRESTORE_CONTEXT
+/*-----------------------------------------------------------*/
+
+	END
 
