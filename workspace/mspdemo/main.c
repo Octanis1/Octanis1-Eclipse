@@ -183,6 +183,7 @@ to send messages from tasks and interrupts the the LCD task. */
 #define mainQUEUE_LENGTH				( 5 )
 
 /* Priorities used by the test and demo tasks. */
+#define mainLED_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
 #define mainLCD_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainCOM_TEST_PRIORITY			( tskIDLE_PRIORITY + 2 )
 #define mainGENERIC_QUEUE_TEST_PRIORITY	( tskIDLE_PRIORITY )
@@ -213,9 +214,11 @@ of this file) will call its callback function. */
 
 /*
  * The reg test tasks as described at the top of this file.
- */
+
 extern void vRegTest1Task( void *pvParameters );
 extern void vRegTest2Task( void *pvParameters );
+*/
+
 
 /*
  * Configures clocks, LCD, port pints, etc. necessary to execute this demo.
@@ -272,9 +275,14 @@ typedef struct
 
 void main( void )
 {
+
 	/* Configure the peripherals used by this demo application.  This includes
 	configuring the joystick input select button to generate interrupts. */
 	prvSetupHardware();
+	vParTestInitialise();
+	/* Start the standard demo application tasks. */
+	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
+
 
 //	/* Create the queue used by tasks and interrupts to send strings to the LCD
 //	task. */
