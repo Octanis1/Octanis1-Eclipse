@@ -1,5 +1,3 @@
-/* !!!! This file is replaced by the config file for the CCS demo! */
-
 /*
     FreeRTOS V8.1.2 - Copyright (C) 2014 Real Time Engineers Ltd. 
     All rights reserved
@@ -65,81 +63,95 @@
     1 tab == 4 spaces!
 */
 
-
-#ifndef FREERTOS_CONFIG_H
-#define FREERTOS_CONFIG_H
-
-#include "msp430f5529.h"
-#include "hal_MSP-EXP430F5438.h"
-
-/*-----------------------------------------------------------
- * Application specific definitions.
+/**
+ * This version of flash .c is for use on systems that have limited stack space
+ * and no display facilities.  The complete version can be found in the 
+ * Demo/Common/Full directory.
+ * 
+ * Three tasks are created, each of which flash an LED at a different rate.  The first 
+ * LED flashes every 200ms, the second every 400ms, the third every 600ms.
  *
- * These definitions should be adjusted for your particular hardware and
- * application requirements.
+ * The LED flash tasks provide instant visual feedback.  They show that the scheduler 
+ * is still operational.
  *
- * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
- *
- * See http://www.freertos.org/a00110.html.
- *----------------------------------------------------------*/
+ */
 
-#define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				1
-#define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( 25000000UL )
-#define configLFXT_CLOCK_HZ       		( 32768L )
-#define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
-#define configMAX_PRIORITIES			( 5 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 4 * 1024 ) )
-#define configMAX_TASK_NAME_LEN			( 10 )
-#define configUSE_TRACE_FACILITY		0
-#define configUSE_16_BIT_TICKS			1
-#define configIDLE_SHOULD_YIELD			1
-#define configUSE_MUTEXES				1
-#define configQUEUE_REGISTRY_SIZE		0
-#define configGENERATE_RUN_TIME_STATS	0
-#define configCHECK_FOR_STACK_OVERFLOW	2
-#define configUSE_RECURSIVE_MUTEXES		1
-#define configUSE_MALLOC_FAILED_HOOK	1
-#define configUSE_APPLICATION_TASK_TAG	0
-#define configUSE_COUNTING_SEMAPHORES	1
 
-#ifdef __LARGE_DATA_MODEL__
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
-#else
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 220 )
-#endif
+#include <stdlib.h>
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 		0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+/* Scheduler include files. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-/* Software timer definitions. */
-#define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		( 3 )
-#define configTIMER_QUEUE_LENGTH		10
-#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
+/* Demo program include files. */
+#include "partest.h"
+#include "flash.h"
 
-/* Set the following definitions to 1 to include the API function, or zero
-to exclude the API function. */
-#define INCLUDE_vTaskPrioritySet		1
-#define INCLUDE_uxTaskPriorityGet		1
-#define INCLUDE_vTaskDelete				0
-#define INCLUDE_vTaskCleanUpResources	0
-#define INCLUDE_vTaskSuspend			1
-#define INCLUDE_vTaskDelayUntil			1
-#define INCLUDE_vTaskDelay				1
+#define ledSTACK_SIZE		configMINIMAL_STACK_SIZE
+#define ledNUMBER_OF_LEDS	( 1 )
+#define ledFLASH_RATE_BASE	( ( TickType_t ) 333 )
 
-/* The MSP430X port uses a callback function to configure its tick interrupt.
-This allows the application to choose the tick interrupt source.
-configTICK_VECTOR must also be set in FreeRTOSConfig.h to the correct interrupt
-vector for the chosen tick interrupt source.  This implementation of
-vApplicationSetupTimerInterrupt() generates the tick from timer A0, so in this
-case configTICK_VECTOR is set to TIMER0_A0_VECTOR. */
-#define configTICK_VECTOR				TIMER0_A0_VECTOR
+/* Variable used by the created tasks to calculate the LED number to use, and
+the rate at which they should flash the LED. */
+static volatile UBaseType_t uxFlashTaskNumber = 0;
 
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+/* The task that is created three times. */
+static portTASK_FUNCTION_PROTO( vLEDFlashTask, pvParameters );
 
-#endif /* FREERTOS_CONFIG_H */
+/*-----------------------------------------------------------*/
+
+void vStartLEDFlashTasks( UBaseType_t uxPriority )
+{
+BaseType_t xLEDTask;
+
+	/* Create the three tasks. */
+	for( xLEDTask = 0; xLEDTask < ledNUMBER_OF_LEDS; ++xLEDTask )
+	{
+		/* Spawn the task. */
+		xTaskCreate( vLEDFlashTask, "LEDx", ledSTACK_SIZE, NULL, uxPriority, ( TaskHandle_t * ) NULL );
+	}
+}
+/*-----------------------------------------------------------*/
+
+static portTASK_FUNCTION( vLEDFlashTask, pvParameters )
+{
+TickType_t xFlashRate, xLastFlashTime;
+UBaseType_t uxLED;
+
+	/* The parameters are not used. */
+	( void ) pvParameters;
+
+	/* Calculate the LED and flash rate. */
+	portENTER_CRITICAL();
+	{
+		/* See which of the eight LED's we should use. */
+		uxLED = uxFlashTaskNumber;
+
+		/* Update so the next task uses the next LED. */
+		uxFlashTaskNumber++;
+	}
+	portEXIT_CRITICAL();
+
+	xFlashRate = ledFLASH_RATE_BASE + ( ledFLASH_RATE_BASE * ( TickType_t ) uxLED );
+	xFlashRate /= portTICK_PERIOD_MS;
+
+	/* We will turn the LED on and off again in the delay period, so each
+	delay is only half the total period. */
+	xFlashRate /= ( TickType_t ) 2;
+
+	/* We need to initialise xLastFlashTime prior to the first call to 
+	vTaskDelayUntil(). */
+	xLastFlashTime = xTaskGetTickCount();
+
+	for(;;)
+	{
+		/* Delay for half the flash period then turn the LED on. */
+		vTaskDelayUntil( &xLastFlashTime, xFlashRate );
+		vParTestToggleLED(  );
+
+		/* Delay for half the flash period then turn the LED off. */
+		vTaskDelayUntil( &xLastFlashTime, xFlashRate );
+		vParTestToggleLED(  );
+	}
+} /*lint !e715 !e818 !e830 Function definition must be standard for task creation. */
 

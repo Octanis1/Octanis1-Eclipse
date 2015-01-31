@@ -15,10 +15,10 @@
  *************************************************************************/   
 void halButtonsInit(unsigned char buttonsMask)
 {  
-//  BUTTON_PORT_OUT |= buttonsMask;
-//  BUTTON_PORT_DIR &= ~buttonsMask;
-//  BUTTON_PORT_REN |= buttonsMask;
-//  BUTTON_PORT_SEL &= ~buttonsMask;
+  BUTTON_PORT_OUT |= buttonsMask;
+  BUTTON_PORT_DIR &= ~buttonsMask;
+  BUTTON_PORT_REN |= buttonsMask; 
+  BUTTON_PORT_SEL &= ~buttonsMask;       
 }
 
 /**********************************************************************//**
@@ -30,9 +30,9 @@ void halButtonsInit(unsigned char buttonsMask)
  *************************************************************************/
 unsigned char halButtonsPressed(void)
 {
-//  unsigned char value;
-//  value = BUTTON_PORT_IN;
-//  return (0xFF - value);                    //Low==ButtonPressed
+  unsigned char value;
+  value = BUTTON_PORT_IN;
+  return (0xFF - value);                    //Low==ButtonPressed
 }
 
 /**********************************************************************//**
@@ -45,9 +45,9 @@ unsigned char halButtonsPressed(void)
  *************************************************************************/
 void halButtonsInterruptEnable(unsigned char buttonIntEnableMask)
 {
-//  BUTTON_PORT_IES &= ~buttonIntEnableMask;
-//  BUTTON_PORT_IFG &= ~buttonIntEnableMask;
-//  BUTTON_PORT_IE |= buttonIntEnableMask;
+  BUTTON_PORT_IES &= ~buttonIntEnableMask;
+  BUTTON_PORT_IFG &= ~buttonIntEnableMask;
+  BUTTON_PORT_IE |= buttonIntEnableMask;
 }
 
 /**********************************************************************//**
@@ -60,7 +60,7 @@ void halButtonsInterruptEnable(unsigned char buttonIntEnableMask)
  *************************************************************************/
 void halButtonsInterruptDisable(unsigned char buttonIntEnableMask)
 {
-//  BUTTON_PORT_IE &= ~buttonIntEnableMask;
+  BUTTON_PORT_IE &= ~buttonIntEnableMask;
 }
 
 /**********************************************************************//**
@@ -71,6 +71,6 @@ void halButtonsInterruptDisable(unsigned char buttonIntEnableMask)
 void halButtonsShutDown()
 {
   //All output, outputting 0s
-//  BUTTON_PORT_OUT &= ~(BUTTON_ALL);
-//  BUTTON_PORT_DIR |= BUTTON_ALL;
+  BUTTON_PORT_OUT &= ~(BUTTON_ALL);
+  BUTTON_PORT_DIR |= BUTTON_ALL;             
 }

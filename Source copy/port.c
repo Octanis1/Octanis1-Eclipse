@@ -117,17 +117,18 @@ volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 					"push	r13						\n\t"	\
 					"push	r14						\n\t"	\
 					"push	r15						\n\t"	\
+					"mov.w	usCriticalNesting, r14	\n\t"	\
+					"push	r14						\n\t"	\
 					"mov.w	pxCurrentTCB, r12		\n\t"	\
 					"mov.w	r1, @r12				\n\t"	\
 				);
-
-/*REMOVED from line 120				"mov.w	usCriticalNesting, r14	\n\t"	\
-									"push	r14						\n\t"	\ */
 
 
 #define portRESTORE_CONTEXT()								\
 	asm volatile (	"mov.w	pxCurrentTCB, r12		\n\t"	\
 					"mov.w	@r12, r1				\n\t"	\
+					"pop	r15						\n\t"	\
+					"mov.w	r15, usCriticalNesting	\n\t"	\
 					"pop	r15						\n\t"	\
 					"pop	r14						\n\t"	\
 					"pop	r13						\n\t"	\
@@ -143,9 +144,6 @@ volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 					"bic	#(0xf0),0(r1)			\n\t"	\
 					"reti							\n\t"	\
 				);
-/*REMOVED from line 130		"pop	r15						\n\t"	\
-							"mov.w	r15, usCriticalNesting	\n\t"	\
-
 
 /*
  * The interrupt service routine used depends on whether the pre-emptive
