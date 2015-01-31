@@ -156,8 +156,8 @@ volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 	 * the context is saved at the start of vPortYieldFromTick().  The tick
 	 * count is incremented after the context is saved.
 	 */
-interrupt (USCI_A0_VECTOR) prvTickISR( void ) __attribute__ ( ( naked ) );
-interrupt (USCI_A0_VECTOR) prvTickISR( void )
+interrupt (USCI_A0_VECTOR) vPortTickISR( void ) __attribute__ ( ( naked ) );
+interrupt (USCI_A0_VECTOR) vPortTickISR( void )
 	{
 		/* Save the context of the interrupted task. */
 		portSAVE_CONTEXT();
@@ -180,7 +180,8 @@ interrupt (USCI_A0_VECTOR) prvTickISR( void )
 	 * tick count.  We don't need to switch context, this can only be done by
 	 * manual calls to taskYIELD();
 	 */
-__interrupt prvTickISR( void )
+interrupt (USCI_A0_VECTOR) prvTickISR( void ) __attribute__ ( ( naked ) );
+interrupt (USCI_A0_VECTOR) prvTickISR( void )
 	{
 		xTaskIncrementTick();
 	}
@@ -219,7 +220,7 @@ BaseType_t xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
 	this function is called. */
-	prvSetupTimerInterrupt();
+	vPortSetupTimerInterrupt();
 
 	/* Restore the context of the first task that is going to run. */
 	portRESTORE_CONTEXT();
@@ -347,6 +348,14 @@ void vPortSetupTimerInterrupt( void )
 #pragma vector=configTICK_VECTOR
 __interrupt void vTickISREntry( void )
 {
+//extern void vPortTickISR( void );
+
+	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
+	vPortTickISR();
+}
+/*REPLACED CODE:
+__interrupt void vTickISREntry( void )
+{
 extern void vPortTickISR( void );
 
 	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
@@ -358,5 +367,6 @@ extern void vPortTickISR( void );
 		vPortCooperativeTickISR();
 	#endif
 }
-
+ *
+ */
 	
