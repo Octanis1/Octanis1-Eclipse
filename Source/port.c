@@ -67,6 +67,10 @@
     1 tab == 4 spaces!
 */
 
+/* Standard includes. */
+#include <stdlib.h>
+#include <signal.h>
+
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -96,6 +100,134 @@ not be initialised to zero as this will cause problems during the startup
 sequence. */
 volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 /*-----------------------------------------------------------*/
+
+
+/*Assembler functions definitions*/
+
+#define portSAVE_CONTEXT()									\
+	asm volatile (	"push	r4						\n\t"	\
+					"push	r5						\n\t"	\
+					"push	r6						\n\t"	\
+					"push	r7						\n\t"	\
+					"push	r8						\n\t"	\
+					"push	r9						\n\t"	\
+					"push	r10						\n\t"	\
+					"push	r11						\n\t"	\
+					"push	r12						\n\t"	\
+					"push	r13						\n\t"	\
+					"push	r14						\n\t"	\
+					"push	r15						\n\t"	\
+					"mov.w	usCriticalNesting, r14	\n\t"	\
+					"push	r14						\n\t"	\
+					"mov.w	pxCurrentTCB, r12		\n\t"	\
+					"mov.w	r1, @r12				\n\t"	\
+				);
+
+
+#define portRESTORE_CONTEXT()								\
+	asm volatile (	"mov.w	pxCurrentTCB, r12		\n\t"	\
+					"mov.w	@r12, r1				\n\t"	\
+					"pop	r15						\n\t"	\
+					"mov.w	r15, usCriticalNesting	\n\t"	\
+					"pop	r15						\n\t"	\
+					"pop	r14						\n\t"	\
+					"pop	r13						\n\t"	\
+					"pop	r12						\n\t"	\
+					"pop	r11						\n\t"	\
+					"pop	r10						\n\t"	\
+					"pop	r9						\n\t"	\
+					"pop	r8						\n\t"	\
+					"pop	r7						\n\t"	\
+					"pop	r6						\n\t"	\
+					"pop	r5						\n\t"	\
+					"pop	r4						\n\t"	\
+					"bic	#(0xf0),0(r1)			\n\t"	\
+					"reti							\n\t"	\
+				);
+
+/*
+ * The interrupt service routine used depends on whether the pre-emptive
+ * scheduler is being used or not.
+ */
+#if configUSE_PREEMPTION == 1
+
+	/*
+	 * Tick ISR for preemptive scheduler.  We can use a naked attribute as
+	 * the context is saved at the start of vPortYieldFromTick().  The tick
+	 * count is incremented after the context is saved.
+	 */
+interrupt (USCI_A0_VECTOR) prvTickISR( void ) __attribute__ ( ( naked ) );
+interrupt (USCI_A0_VECTOR) prvTickISR( void )
+	{
+		/* Save the context of the interrupted task. */
+		portSAVE_CONTEXT();
+
+		/* Increment the tick count then switch to the highest priority task
+		that is ready to run. */
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			vTaskSwitchContext();
+		}
+
+		/* Restore the context of the new task. */
+		portRESTORE_CONTEXT();
+	}
+
+#else
+
+	/*
+	 * Tick ISR for the cooperative scheduler.  All this does is increment the
+	 * tick count.  We don't need to switch context, this can only be done by
+	 * manual calls to taskYIELD();
+	 */
+__interrupt prvTickISR( void )
+	{
+		xTaskIncrementTick();
+	}
+#endif
+
+
+
+/*
+ * Manual context switch called by portYIELD or taskYIELD.
+ *
+ * The first thing we do is save the registers so we can use a naked attribute.
+ */
+void vPortYield( void ) __attribute__ ( ( naked ) );
+void vPortYield( void )
+{
+	/* We want the stack of the task being saved to look exactly as if the task
+	was saved during a pre-emptive RTOS tick ISR.  Before calling an ISR the
+	msp430 places the status register onto the stack.  As this is a function
+	call and not an ISR we have to do this manually. */
+	asm volatile ( "push	r2" );
+	_DINT();
+
+	/* Save the context of the current task. */
+	portSAVE_CONTEXT();
+
+	/* Switch to the highest priority task that is ready to run. */
+	vTaskSwitchContext();
+
+	/* Restore the context of the new task. */
+	portRESTORE_CONTEXT();
+}
+/*-----------------------------------------------------------*/
+
+
+BaseType_t xPortStartScheduler( void )
+{
+	/* Setup the hardware to generate the tick.  Interrupts are disabled when
+	this function is called. */
+	prvSetupTimerInterrupt();
+
+	/* Restore the context of the first task that is going to run. */
+	portRESTORE_CONTEXT();
+
+	/* Should not get here as the tasks are now running! */
+	return pdTRUE;
+}
+
 
 
 /*
