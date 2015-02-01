@@ -106,7 +106,7 @@ static void prvToggleOnBoardLED( void );
 void vParTestInitialise( void )
 {
 	/* Used for the onboard LED. */
-	//P4SEL &= ~(LED_GND + LED_PIN);
+	P4SEL &= ~(LED_GND + LED_PIN);
 	P4DIR |= (LED_GND + LED_PIN); //the LED annode and cathode
 	P4OUT &= ~LED_GND; //write a zero to the LED ground
 	P4OUT |= LED_PIN; //write a one to led
@@ -128,7 +128,7 @@ static void prvToggleOnBoardLED( void )
 static unsigned short sState = pdFALSE;
 
 	/* Toggle the state of the single genuine on board LED. */
-	if( sState )	
+	if( sState )
 	{
 		P4OUT |= LED_PIN;
 	}

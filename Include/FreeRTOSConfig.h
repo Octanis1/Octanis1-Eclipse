@@ -69,7 +69,7 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-#include "msp430f5529.h"
+#include "msp430.h"
 #include "hal_MSP-EXP430F5438.h"
 
 /*-----------------------------------------------------------

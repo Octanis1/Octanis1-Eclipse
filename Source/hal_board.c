@@ -43,8 +43,8 @@ void halBoardStopOutputSystemClock(void)
  *************************************************************************/
 void halBoardInit(void)
 {
-	/*REMOVED, but should be implemented correctly
   //Tie unused ports
+
   PAOUT  = 0;
   PADIR  = 0xFFFF;
   PASEL  = 0;
@@ -53,19 +53,12 @@ void halBoardInit(void)
   PBSEL  = 0;
   PCOUT  = 0;
   PCDIR  = 0xFFFF;
-  PCSEL  = 0;
+  PCSEL  = BIT4+BIT5; //Selects the crystal pins XT1 (pin 5.4, 5.5)
   PDOUT  = 0;
   PDDIR  = 0xFFFF;
-  PDSEL  = 0x0003;
-  PEOUT  = 0;
-  PEDIR  = 0xFEFF;                          // P10.0 to USB RST pin,
-                                            // ...if enabled with J5
-  PESEL  = 0;
-  P11OUT = 0;
-  P11DIR = 0xFF;
-  PJOUT  = 0;
-  PJDIR  = 0xFF;
-  P11SEL = 0; */
+  PDSEL  = 0;
+
+
 }
 
 /**********************************************************************//**

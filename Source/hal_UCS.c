@@ -12,7 +12,7 @@
 //    V1.1  Added parameter for XTDrive
 //*******************************************************************************
 
-#include "msp430.h"
+#include "msp430f5529.h"
 #include "hal_UCS.h"
 
 //************************************************************************
@@ -43,11 +43,20 @@
 void LFXT_Start(uint16_t xtdrive)
 {
   UCSCTL6_L |= XT1DRIVE1_L+XT1DRIVE0_L; // Highest drive setting for XT1 startup
+  UCSCTL6_H |= XT2OFF; // turn XT2 off
 
   while (SFRIFG1 & OFIFG) {   // check OFIFG fault flag
     UCSCTL7 &= ~(DCOFFG+XT1LFOFFG+XT1HFOFFG+XT2OFFG); // Clear OSC flaut Flags fault flags
     SFRIFG1 &= ~OFIFG;        // Clear OFIFG fault flag
+
   }
+
+
+  P4SEL &= ~(BIT7 + BIT6);
+      P4DIR |= (BIT7 + BIT6); //the LED annode and cathode
+      	P4OUT &= ~BIT7; //write a zero to the LED ground
+      	P4OUT |= BIT6; //write a one to led
+
   UCSCTL6 = (UCSCTL6 & ~(XT1DRIVE_3)) |(xtdrive); // set Drive mode
 }
 

@@ -195,8 +195,6 @@ information.  */
 /* The baud rate used by the comtest tasks. */
 #define mainCOM_TEST_BAUD_RATE			( 38400 )
 
-/* The maximum number of lines of text that can be displayed on the LCD. */
-#define mainMAX_LCD_LINES				( 8 )
 
 /* Just used to ensure parameters are passed into tasks correctly. */
 #define mainTASK_PARAMETER_CHECK_VALUE	( ( void * ) 0xDEAD )
@@ -559,6 +557,9 @@ static void prvSetupHardware( void )
 	WDTCTL = WDTPW + WDTHOLD;
 
 	halBoardInit();
+
+
+
 
 	LFXT_Start( XT1DRIVE_0 );
 	hal430SetSystemClock( configCPU_CLOCK_HZ, configLFXT_CLOCK_HZ );
