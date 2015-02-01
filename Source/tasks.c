@@ -1474,10 +1474,13 @@ BaseType_t xReturn;
 	{
 		if( xReturn == pdPASS )
 		{
+
 			xReturn = xTimerCreateTimerTask();
 		}
 		else
 		{
+
+
 			mtCOVERAGE_TEST_MARKER();
 		}
 	}
@@ -1510,18 +1513,22 @@ BaseType_t xReturn;
 
 		/* Setting up the timer tick is hardware specific and thus in the
 		portable interface. */
+
 		if( xPortStartScheduler() != pdFALSE )
 		{
 			/* Should not reach here as if the scheduler is running the
 			function will not return. */
+
 		}
 		else
 		{
 			/* Should only reach here if a task calls xTaskEndScheduler(). */
 		}
+
 	}
 	else
 	{
+
 		/* This line will only be reached if the kernel could not be started,
 		because there was not enough FreeRTOS heap to create the idle task
 		or the timer task. */

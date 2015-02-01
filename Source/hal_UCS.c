@@ -42,21 +42,12 @@
 */
 void LFXT_Start(uint16_t xtdrive)
 {
-  UCSCTL6_L |= XT1DRIVE1_L+XT1DRIVE0_L; // Highest drive setting for XT1 startup
-  UCSCTL6_H |= XT2OFF; // turn XT2 off
 
+  UCSCTL6_L |= XT1DRIVE1_L+XT1DRIVE0_L; // Highest drive setting for XT1 startup
   while (SFRIFG1 & OFIFG) {   // check OFIFG fault flag
     UCSCTL7 &= ~(DCOFFG+XT1LFOFFG+XT1HFOFFG+XT2OFFG); // Clear OSC flaut Flags fault flags
     SFRIFG1 &= ~OFIFG;        // Clear OFIFG fault flag
-
   }
-
-
-  P4SEL &= ~(BIT7 + BIT6);
-      P4DIR |= (BIT7 + BIT6); //the LED annode and cathode
-      	P4OUT &= ~BIT7; //write a zero to the LED ground
-      	P4OUT |= BIT6; //write a one to led
-
   UCSCTL6 = (UCSCTL6 & ~(XT1DRIVE_3)) |(xtdrive); // set Drive mode
 }
 
@@ -262,10 +253,10 @@ static void Init_FLL(uint16_t fsystem, uint16_t ratio)
   else
 	UCSCTL1= DCORSEL_7 ;
 
-  while (SFRIFG1 & OFIFG) {                               // check OFIFG fault flag
+  /*while (SFRIFG1 & OFIFG) {                               // check OFIFG fault flag
     UCSCTL7 &= ~(DCOFFG+XT1LFOFFG+XT1HFOFFG+XT2OFFG);     // Clear OSC flaut Flags
     SFRIFG1 &= ~OFIFG;                                    // Clear OFIFG fault flag
-  }
+  }*/
 
   if (mode == 1)                           		  // fsystem > 16000
     SELECT_MCLK_SMCLK(SELM__DCOCLK + SELS__DCOCLK);       // select DCOCLK

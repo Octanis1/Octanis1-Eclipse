@@ -162,8 +162,8 @@ volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 	 * the context is saved at the start of vPortYieldFromTick().  The tick
 	 * count is incremented after the context is saved.
 	 */
-interrupt (USCI_A0_VECTOR) vPortTickISR( void ) __attribute__ ( ( naked ) );
-interrupt (USCI_A0_VECTOR) vPortTickISR( void )
+interrupt (TIMER0_A0_VECTOR) vPortTickISR( void ) __attribute__ ( ( naked ) );
+interrupt (TIMER0_A0_VECTOR) vPortTickISR( void )
 	{
 		/* Save the context of the interrupted task. */
 		portSAVE_CONTEXT();
@@ -186,8 +186,8 @@ interrupt (USCI_A0_VECTOR) vPortTickISR( void )
 	 * tick count.  We don't need to switch context, this can only be done by
 	 * manual calls to taskYIELD();
 	 */
-interrupt (USCI_A0_VECTOR) prvTickISR( void ) __attribute__ ( ( naked ) );
-interrupt (USCI_A0_VECTOR) prvTickISR( void )
+interrupt (TIMER0_A0_VECTOR) prvTickISR( void ) __attribute__ ( ( naked ) );
+interrupt (TIMER0_A0_VECTOR) prvTickISR( void )
 	{
 		xTaskIncrementTick();
 	}
@@ -232,6 +232,7 @@ BaseType_t xPortStartScheduler( void )
 	portRESTORE_CONTEXT();
 
 	/* Should not get here as the tasks are now running! */
+
 	return pdTRUE;
 }
 
@@ -351,14 +352,14 @@ void vPortSetupTimerInterrupt( void )
 /*-----------------------------------------------------------*/
 
 //TODO: how to fix this??
-#pragma vector=configTICK_VECTOR
-__interrupt void vTickISREntry( void )
-{
-//extern void vPortTickISR( void );
-
-	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
-	vPortTickISR();
-}
+//#pragma vector=configTICK_VECTOR
+//__interrupt void vTickISREntry( void )
+//{
+////extern void vPortTickISR( void );
+//
+//	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
+//	vPortTickISR();
+//}
 /*REPLACED CODE:
 __interrupt void vTickISREntry( void )
 {

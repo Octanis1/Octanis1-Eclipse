@@ -150,7 +150,7 @@
 #include "queue.h"
 
 /* Hardware includes. */
-#include "msp430.h"
+#include "msp430f5529.h"
 #include "hal_MSP-EXP430F5438.h"
 
 /* Standard demo includes. */
@@ -160,6 +160,7 @@
 #include "GenQTest.h"
 #include "TimerDemo.h"
 #include "countsem.h"
+#include "flash.h"
 
 /* Codes sent within messages to the LCD task so the LCD task can interpret
 exactly what the message it just received was.  These are sent in the
@@ -271,7 +272,7 @@ typedef struct
 
 /*-----------------------------------------------------------*/
 
-void main( void )
+int main( void )
 {
 
 	/* Configure the peripherals used by this demo application.  This includes
@@ -322,11 +323,14 @@ void main( void )
 		vTaskStartScheduler();
 	//}
 
+
 	/* If all is well then this line will never be reached.  If it is reached
 	then it is likely that there was insufficient (FreeRTOS) heap memory space
 	to create the idle task.  This may have been trapped by the malloc() failed
 	hook function, if one is configured. */
 	while(1);
+
+	return 0;
 
 }
 /*-----------------------------------------------------------*/
@@ -558,16 +562,15 @@ static void prvSetupHardware( void )
 
 	halBoardInit();
 
+	//TODO: reactivate this to use XT1
+	//LFXT_Start( XT1DRIVE_0 );
 
-
-
-	LFXT_Start( XT1DRIVE_0 );
+	//TODO: use XT1 instead of internal reference (probably a hardware problem)
+	UCSCTL3 |= SELREF_2;    // Set DCO FLL reference = REFO
 	hal430SetSystemClock( configCPU_CLOCK_HZ, configLFXT_CLOCK_HZ );
 
 	halButtonsInit( BUTTON_ALL );
 	halButtonsInterruptEnable( BUTTON_SELECT );
-
-
 }
 /*-----------------------------------------------------------*/
 

@@ -16,8 +16,8 @@
  *************************************************************************/
 void halBoardOutputSystemClock(void) //outputs clock to testpoints
 {
-/*REMOVED  CLK_PORT_DIR |= 0x07;
-  CLK_PORT_SEL |= 0x07; */
+  CLK_PORT_DIR |= BIT0;
+  CLK_PORT_SEL |= BIT0;
 }
 
 /**********************************************************************//**
@@ -29,9 +29,9 @@ void halBoardOutputSystemClock(void) //outputs clock to testpoints
  *************************************************************************/
 void halBoardStopOutputSystemClock(void)
 {
-	/*REMOVED  CLK_PORT_OUT &= ~0x07;
-  CLK_PORT_DIR |= 0x07;	
-  CLK_PORT_SEL &= ~0x07;*/
+  CLK_PORT_OUT &= ~BIT0;
+  CLK_PORT_DIR |= BIT0;
+  CLK_PORT_SEL &= ~BIT0;
 }
 
 /**********************************************************************//**
@@ -53,7 +53,8 @@ void halBoardInit(void)
   PBSEL  = 0;
   PCOUT  = 0;
   PCDIR  = 0xFFFF;
-  PCSEL  = BIT4+BIT5; //Selects the crystal pins XT1 (pin 5.4, 5.5)
+  PCSEL  = 0; //Selects the crystal pins XT1 (pin 5.4, 5.5)
+  P5SEL = BIT4+BIT5;
   PDOUT  = 0;
   PDDIR  = 0xFFFF;
   PDSEL  = 0;

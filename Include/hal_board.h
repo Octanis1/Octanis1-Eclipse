@@ -11,9 +11,9 @@
 #define LED_1             BIT0
 #define LED_2             BIT1
 
-#define CLK_PORT_DIR      P11DIR //outputs clocks to testpoints
-#define CLK_PORT_OUT      P11OUT
-#define CLK_PORT_SEL      P11SEL
+#define CLK_PORT_DIR      P1DIR //outputs clocks to testpoints
+#define CLK_PORT_OUT      P1OUT
+#define CLK_PORT_SEL      P1SEL
 
 /*----------------------------------------------------------------
  *                  Function Prototypes

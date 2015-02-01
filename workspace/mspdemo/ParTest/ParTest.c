@@ -93,8 +93,8 @@
 #include "partest.h"
 
 /* The LED number of the real on board LED, rather than a simulated LED. */
-#define LED_GND					BIT7
-#define LED_PIN					BIT6
+#define LED_VDD					BIT6
+#define LED_PIN					BIT7
 
 /*
  * Toggle the single genuine built in LED.
@@ -106,10 +106,10 @@ static void prvToggleOnBoardLED( void );
 void vParTestInitialise( void )
 {
 	/* Used for the onboard LED. */
-	P4SEL &= ~(LED_GND + LED_PIN);
-	P4DIR |= (LED_GND + LED_PIN); //the LED annode and cathode
-	P4OUT &= ~LED_GND; //write a zero to the LED ground
-	P4OUT |= LED_PIN; //write a one to led
+	P4SEL &= ~(LED_VDD + LED_PIN);
+	P4DIR |= (LED_VDD + LED_PIN); //the LED annode and cathode
+
+	P4OUT |= LED_VDD; //write a one to led
 
 
 }
