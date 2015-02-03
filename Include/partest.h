@@ -70,6 +70,8 @@
 
 void vParTestInitialise( void );
 void vParTestToggleLED( void );
+void vParTestSetLED(BaseType_t state);
+
 
 #endif
 

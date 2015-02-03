@@ -100,8 +100,9 @@ static QueueHandle_t xCharsForTx;
 static volatile short sTHREEmpty;
 
 /* Interrupt service routines. */
-interrupt (UART1RX_VECTOR) wakeup vRxISR( void );
-interrupt (UART1TX_VECTOR) wakeup vTxISR( void );
+interrupt (USCI_A1_VECTOR) wakeup vRxTxISR( void );
+//REMOVED: interrupt is in a single vector!
+//interrupt (USCI_A1_VECTOR) wakeup vTxISR( void );
 
 /*-----------------------------------------------------------*/
 
@@ -239,10 +240,11 @@ signed portBASE_TYPE xReturn;
  * UART RX interrupt service routine.
  */
 //OLD: interrupt (UART1RX_VECTOR) wakeup vRxISR( void )
-interrupt (USCI_A1_VECTOR) wakeup vRxISR( void )
+interrupt (USCI_A1_VECTOR) wakeup vRxTxISR( void )
 {
 signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+//TODO make a select case if it is RX or TX (looking at the interrupt flag)
 
 	/* Get the character from the UART and post it on the queue of Rxed 
 	characters. */
@@ -260,29 +262,29 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	}
 }
 /*-----------------------------------------------------------*/
-
+//REMOVED!!!
 /*
  * UART Tx interrupt service routine.
- */
+
 //OLD: interrupt (UART1TX_VECTOR) wakeup vTxISR( void )
-interrupt (USCI_A0_VECTOR) wakeup vTxISR( void )
+interrupt (USCI_A1_VECTOR) wakeup vTxISR( void ) //TODO: this conflicts with the interrupt in the port.c file
 {
 signed char cChar;
 portBASE_TYPE xTaskWoken = pdFALSE;
 
 	/* The previous character has been transmitted.  See if there are any
-	further characters waiting transmission. */
+	further characters waiting transmission.
 
 	if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWoken ) == pdTRUE )
 	{
-		/* There was another character queued - transmit it now. */
+		/* There was another character queued - transmit it now.
 		//OLD: U1TXBUF = cChar;
 		UCA1TXBUF = cChar;
 	}
 	else
 	{
-		/* There were no other characters to transmit. */
+		/* There were no other characters to transmit.
 		sTHREEmpty = pdTRUE;
 	}
 }
-
+*/

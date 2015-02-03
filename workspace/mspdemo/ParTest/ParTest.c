@@ -110,8 +110,6 @@ void vParTestInitialise( void )
 	P4DIR |= (LED_VDD + LED_PIN); //the LED annode and cathode
 
 	P4OUT |= LED_VDD; //write a one to led
-
-
 }
 
 /*-----------------------------------------------------------*/
@@ -122,6 +120,18 @@ void vParTestToggleLED( void )
 	prvToggleOnBoardLED();
 }
 /*-----------------------------------------------------------*/
+
+void vParTestSetLED(BaseType_t state)
+{
+	if( state )
+	{
+		P4OUT &= ~LED_PIN;
+	}
+	else
+	{
+		P4OUT |= LED_PIN;
+	}
+}
 
 static void prvToggleOnBoardLED( void )
 {

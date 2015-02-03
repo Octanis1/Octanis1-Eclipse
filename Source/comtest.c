@@ -153,9 +153,11 @@ static volatile UBaseType_t uxRxLoops = comINITIAL_RX_COUNT_VALUE;
 
 void vAltStartComTestTasks( UBaseType_t uxPriority, uint32_t ulBaudRate, UBaseType_t uxLED )
 {
+
 	/* Initialise the com port then spawn the Rx and Tx tasks. */
 	uxBaseLED = uxLED;
 	xSerialPortInitMinimal( ulBaudRate, comBUFFER_LEN );
+
 
 	/* The Tx task is spawned with a lower priority than the Rx task. */
 	xTaskCreate( vComTxTask, "COMTx", comSTACK_SIZE, NULL, uxPriority - 1, ( TaskHandle_t * ) NULL );
@@ -179,12 +181,12 @@ TickType_t xTimeToWait;
 		{
 			if( xSerialPutChar( xPort, cByteToSend, comNO_BLOCK ) == pdPASS )
 			{
-				//REMOVED: vParTestToggleLED( uxBaseLED + comTX_LED_OFFSET );
+				vParTestToggleLED(  );
 			}
 		}
 
 		/* Turn the LED off while we are not doing anything. */
-		//REMOVED: vParTestSetLED( uxBaseLED + comTX_LED_OFFSET, pdFALSE );
+		vParTestSetLED( pdFALSE );
 
 		/* We have posted all the characters in the string - wait before
 		re-sending.  Wait a pseudo-random time as this will provide a better
@@ -228,7 +230,7 @@ BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 				until the expected character sequence is about to restart. */
 				if( cByteRxed == cExpectedByte )
 				{
-					//REMOVED: vParTestToggleLED( uxBaseLED + comRX_LED_OFFSET );
+					//vParTestToggleLED(  );
 				}
 				else
 				{
@@ -239,7 +241,7 @@ BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 		}
 
 		/* Turn the LED off while we are not doing anything. */
-		//REMOVED: vParTestSetLED( uxBaseLED + comRX_LED_OFFSET, pdFALSE );
+		vParTestSetLED( pdFALSE );
 
 		/* Did we break out of the loop because the characters were received in
 		an unexpected order?  If so wait here until the character sequence is

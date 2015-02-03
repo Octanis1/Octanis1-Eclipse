@@ -1,22 +1,8 @@
 /*
-    FreeRTOS V8.1.2 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.2.0 - Copyright (C) 2015 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
-
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS provides completely free yet professionally developed,    *
-     *    robust, strictly quality controlled, supported, and cross          *
-     *    platform software that has become a de facto standard.             *
-     *                                                                       *
-     *    Help yourself get started quickly and support the FreeRTOS         *
-     *    project by purchasing a FreeRTOS tutorial book, reference          *
-     *    manual, or both from: http://www.FreeRTOS.org/Documentation        *
-     *                                                                       *
-     *    Thank you!                                                         *
-     *                                                                       *
-    ***************************************************************************
 
     This file is part of the FreeRTOS distribution.
 
@@ -24,37 +10,55 @@
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
+	***************************************************************************
     >>!   NOTE: The modification to the GPL is included to allow you to     !<<
     >>!   distribute a combined work that includes FreeRTOS without being   !<<
     >>!   obliged to provide the source code for proprietary components     !<<
     >>!   outside of the FreeRTOS kernel.                                   !<<
+	***************************************************************************
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  Full license text is available from the following
+    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
     link: http://www.freertos.org/a00114.html
 
-    1 tab == 4 spaces!
-
     ***************************************************************************
      *                                                                       *
-     *    Having a problem?  Start by reading the FAQ "My application does   *
-     *    not run, what could be wrong?"                                     *
+     *    FreeRTOS provides completely free yet professionally developed,    *
+     *    robust, strictly quality controlled, supported, and cross          *
+     *    platform software that is more than just the market leader, it     *
+     *    is the industry's de facto standard.                               *
      *                                                                       *
-     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *    Help yourself get started quickly while simultaneously helping     *
+     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
+     *    tutorial book, reference manual, or both:                          *
+     *    http://www.FreeRTOS.org/Documentation                              *
      *                                                                       *
     ***************************************************************************
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
-    license and Real Time Engineers Ltd. contact details.
+    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
+	the FAQ page "My application does not run, what could be wrong?".  Have you
+	defined configASSERT()?
+
+	http://www.FreeRTOS.org/support - In return for receiving this top quality
+	embedded software for free we request you assist our global community by
+	participating in the support forum.
+
+	http://www.FreeRTOS.org/training - Investing in training allows your team to
+	be as productive as possible as early as possible.  Now you can receive
+	FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
+	Ltd, and the world's leading authority on the world's leading RTOS.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, a DOS
     compatible FAT file system, and our tiny thread aware UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
-    Integrity Systems to sell under the OpenRTOS brand.  Low cost OpenRTOS
-    licenses offer ticketed support, indemnification and middleware.
+    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
+    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
+
+    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
+    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
+    licenses offer ticketed support, indemnification and commercial middleware.
 
     http://www.SafeRTOS.com - High Integrity Systems also provide a safety
     engineered and independently SIL3 certified version for use in safety and
@@ -64,45 +68,34 @@
 */
 
 
-/* BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER.   
- * 
- * This file only supports UART 1
+/* BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER.
+ *
+ * This is not a proper UART driver.  It only supports one port, uses loopback
+ * mode, and is used to test interrupts that use the FreeRTOS API as part of 
+ * a wider test suite.  Nor is it intended to show an efficient implementation
+ * of a UART interrupt service routine as queues are used to pass individual
+ * characters one at a time!
  */
 
 /* Standard includes. */
 #include <stdlib.h>
-#include <legacymsp430.h>
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
-#include "semphr.h"
 #include "queue.h"
 #include "task.h"
 
 /* Demo application includes. */
 #include "serial.h"
 
-/* Constants required to setup the hardware. */
-//OLD(not used any more) #define serTX_AND_RX			( ( unsigned char ) 0x03 )
-
 /* Misc. constants. */
 #define serNO_BLOCK				( ( TickType_t ) 0 )
 
-/* Enable the UART Tx interrupt. */
-#define vInterruptOn() IFG2 |= UTXIFG1
-
 /* The queue used to hold received characters. */
-static QueueHandle_t xRxedChars; 
+static QueueHandle_t xRxedChars;
 
 /* The queue used to hold characters waiting transmission. */
-static QueueHandle_t xCharsForTx; 
-
-static volatile short sTHREEmpty;
-
-/* Interrupt service routines. */
-interrupt (USCI_A1_VECTOR) wakeup vRxTxISR( void );
-//REMOVED: interrupt is in a single vector!
-//interrupt (USCI_A1_VECTOR) wakeup vTxISR( void );
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
@@ -111,6 +104,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 unsigned long ulBaudRateCount;
 
 	/* Initialise the hardware. */
+	P4SEL = BIT4+BIT5;          // P3.3,4 = USCI_A0 TXD/RXD
 
 	/* Generate the baud rate constants for the wanted baud rate. */
 	ulBaudRateCount = configCPU_CLOCK_HZ / ulWantedBaud;
@@ -122,51 +116,31 @@ unsigned long ulBaudRateCount;
 		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
 		/* Reset UART. */
-		//OLD: UCTL1 |= SWRST;
 		UCA1CTL1 |= UCSWRST;
 
-		/* Set pin function. */
-		// OLD: P4SEL |= serTX_AND_RX;
-		P4SEL |= BIT4 + BIT5; // pin 4.4,5=UCA1RXD,TXD
-
-
-		/* All other bits remain at zero for n, 8, 1 interrupt driven operation. 
-		LOOPBACK MODE!*/
-		//REMOVED: U1CTL |= CHAR + LISTEN;
-		//OLD: U1TCTL |= SSEL1;
-		UCA1CTL1 |= UCSSEL1;
-
+		/* Use SMCLK. */
+		UCA1CTL1 = UCSSEL__SMCLK;
+		
 		/* Setup baud rate low byte. */
-		//OLD: U1BR0 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 		UCA1BR0 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
 		/* Setup baud rate high byte. */
 		ulBaudRateCount >>= 8UL;
-		//OLD: U1BR1 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 		UCA1BR1 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
-		/* Enable ports. */
-		//REMOVED: ME2 |= UTXE1 + URXE1;
-
-		//NEW (from uscia0_uart_01 example):
-		UCA1MCTL |= UCBRS_1 + UCBRF_0;            // Modulation UCBRSx=1, UCBRFx=0
-
-		/* Set. */
-		//OLD: UCTL1 &= ~SWRST;
-		UCA1CTL1 &= ~UCSWRST;
-
-		/* Nothing in the buffer yet. */
-		sTHREEmpty = pdTRUE;
+		/* UCLISTEN sets loopback mode! */
+		UCA1STAT = UCLISTEN;
 
 		/* Enable interrupts. */
-		//OLD: IE2 |= URXIE1 + UTXIE1;
-		UCA1IE |= UCRXIE + UCTXIE;
+		UCA1IE |= UCRXIE;
+		
+		/* Take out of reset. */
+		UCA1CTL1 &= ~UCSWRST;
 	}
 	portEXIT_CRITICAL();
 	
-	/* Unlike other ports, this serial code does not allow for more than one
-	com port.  We therefore don't return a pointer to a port structure and can
-	instead just return NULL. */
+	/* Note the comments at the top of this file about this not being a generic
+	UART driver. */
 	return NULL;
 }
 /*-----------------------------------------------------------*/
@@ -190,101 +164,64 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 {
 signed portBASE_TYPE xReturn;
 
-	/* Transmit a character. */
-
-	portENTER_CRITICAL();
-	{
-		if( sTHREEmpty == pdTRUE )
-		{
-			/* If sTHREEmpty is true then the UART Tx ISR has indicated that 
-			there are no characters queued to be transmitted - so we can
-			write the character directly to the shift Tx register. */
-			sTHREEmpty = pdFALSE;
-			//OLD: U1TXBUF = cOutChar;
-			UCA1TXBUF = cOutChar;
-			xReturn = pdPASS;
-		}
-		else
-		{
-			/* sTHREEmpty is false, so there are still characters waiting to be
-			transmitted.  We have to queue this character so it gets 
-			transmitted	in turn. */
-
-			/* Return false if after the block time there is no room on the Tx 
-			queue.  It is ok to block inside a critical section as each task
-			maintains it's own critical section status. */
-			xReturn = xQueueSend( xCharsForTx, &cOutChar, xBlockTime );
-
-			/* Depending on queue sizing and task prioritisation:  While we 
-			were blocked waiting to post on the queue interrupts were not 
-			disabled.  It is possible that the serial ISR has emptied the 
-			Tx queue, in which case we need to start the Tx off again
-			writing directly to the Tx register. */
-			if( ( sTHREEmpty == pdTRUE ) && ( xReturn == pdPASS ) )
-			{
-				/* Get back the character we just posted. */
-				xQueueReceive( xCharsForTx, &cOutChar, serNO_BLOCK );
-				sTHREEmpty = pdFALSE;
-				//OLD: U1TXBUF = cOutChar;
-				UCA1TXBUF = cOutChar;
-			}
-		}
-	}
-	portEXIT_CRITICAL();
-
-	return pdPASS;
+	/* Send the next character to the queue of characters waiting transmission,
+	then enable the UART Tx interrupt, just in case UART transmission has already
+	completed and switched itself off. */
+	xReturn = xQueueSend( xCharsForTx, &cOutChar, xBlockTime );
+	UCA1IE |= UCTXIE;
+	
+	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-/*
- * UART RX interrupt service routine.
- */
-//OLD: interrupt (UART1RX_VECTOR) wakeup vRxISR( void )
-interrupt (USCI_A1_VECTOR) wakeup vRxTxISR( void )
+/* The implementation of this interrupt is provided to demonstrate the use
+of queues from inside an interrupt service routine.  It is *not* intended to
+be an efficient interrupt implementation.  A real application should make use
+of the DMA.  Or, as a minimum, transmission and reception could use a simple
+RAM ring buffer, and synchronise with a task using a semaphore when a complete
+message has been received or transmitted. */
+
+
+#pragma vector=USCI_A1_VECTOR
+__interrupt void prvUSCI_A1_ISR( void )
 {
 signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-//TODO make a select case if it is RX or TX (looking at the interrupt flag)
 
-	/* Get the character from the UART and post it on the queue of Rxed 
-	characters. */
-	//OLD: cChar = U1RXBUF;
-	cChar = UCA1RXBUF;
-
-	xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
-
-	if( xHigherPriorityTaskWoken )
+	if( ( UCA1IFG & UCRXIFG ) != 0 )
 	{
-		/*If the post causes a task to wake force a context switch 
-		as the woken task may have a higher priority than the task we have 
-		interrupted. */
-		taskYIELD();
+		/* Get the character from the UART and post it on the queue of Rxed
+		characters. */
+		cChar = UCA1RXBUF;
+		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
+	}	
+	else if( ( UCA1IFG & UCTXIFG ) != 0 )
+	{
+		/* The previous character has been transmitted.  See if there are any
+		further characters waiting transmission. */
+		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
+		{
+			/* There was another character queued - transmit it now. */
+			UCA1TXBUF = cChar;
+		}
+		else
+		{
+			/* There were no other characters to transmit - disable the Tx
+			interrupt. */
+			UCA1IE &= ~UCTXIE;
+		}
 	}
+	
+	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
+	
+	/* If writing to a queue caused a task to unblock, and the unblocked task
+	has a priority equal to or above the task that this interrupt interrupted,
+	then lHigherPriorityTaskWoken will have been set to pdTRUE internally within
+	xQueuesendFromISR(), and portEND_SWITCHING_ISR() will ensure that this
+	interrupt returns directly to the higher priority unblocked task. 
+	
+	THIS MUST BE THE LAST THING DONE IN THE ISR. */	
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
-/*-----------------------------------------------------------*/
-//REMOVED!!!
-/*
- * UART Tx interrupt service routine.
 
-//OLD: interrupt (UART1TX_VECTOR) wakeup vTxISR( void )
-interrupt (USCI_A1_VECTOR) wakeup vTxISR( void ) //TODO: this conflicts with the interrupt in the port.c file
-{
-signed char cChar;
-portBASE_TYPE xTaskWoken = pdFALSE;
 
-	/* The previous character has been transmitted.  See if there are any
-	further characters waiting transmission.
-
-	if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWoken ) == pdTRUE )
-	{
-		/* There was another character queued - transmit it now.
-		//OLD: U1TXBUF = cChar;
-		UCA1TXBUF = cChar;
-	}
-	else
-	{
-		/* There were no other characters to transmit.
-		sTHREEmpty = pdTRUE;
-	}
-}
-*/

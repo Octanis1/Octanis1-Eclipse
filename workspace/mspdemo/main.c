@@ -194,7 +194,7 @@ information.  */
 #define mainCOM_TEST_LED				( 1 )
 
 /* The baud rate used by the comtest tasks. */
-#define mainCOM_TEST_BAUD_RATE			( 38400 )
+#define mainCOM_TEST_BAUD_RATE			( 9600 )
 
 
 /* Just used to ensure parameters are passed into tasks correctly. */
@@ -280,7 +280,7 @@ int main( void )
 	prvSetupHardware();
 	vParTestInitialise();
 	/* Start the standard demo application tasks. */
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
+	//vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 
 
 //	/* Create the queue used by tasks and interrupts to send strings to the LCD
@@ -291,8 +291,12 @@ int main( void )
 //	attempt to use the queue. */
 //	if( xLCDQueue != NULL )
 //	{
+		//P1OUT |= BIT0; //TODO Remove debug code
+
 //		/* Create the standard demo tasks. */
-//		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+
+		//P4OUT |= BIT7; //TODO Remove debug code
 //		vStartDynamicPriorityTasks();
 //		vStartGenericQueueTasks( mainGENERIC_QUEUE_TEST_PRIORITY );
 //		vStartCountingSemaphoreTasks();

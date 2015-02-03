@@ -89,7 +89,7 @@
 
 #define ledSTACK_SIZE		configMINIMAL_STACK_SIZE
 #define ledNUMBER_OF_LEDS	( 1 )
-#define ledFLASH_RATE_BASE	( ( TickType_t ) 333 )
+#define ledFLASH_RATE_BASE	( ( TickType_t ) 1500 )
 
 /* Variable used by the created tasks to calculate the LED number to use, and
 the rate at which they should flash the LED. */
