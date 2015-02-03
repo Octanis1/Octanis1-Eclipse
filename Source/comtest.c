@@ -160,7 +160,7 @@ void vAltStartComTestTasks( UBaseType_t uxPriority, uint32_t ulBaudRate, UBaseTy
 
 
 	/* The Tx task is spawned with a lower priority than the Rx task. */
-	xTaskCreate( vComTxTask, "COMTx", comSTACK_SIZE, NULL, uxPriority - 1, ( TaskHandle_t * ) NULL );
+	//xTaskCreate( vComTxTask, "COMTx", comSTACK_SIZE, NULL, uxPriority - 1, ( TaskHandle_t * ) NULL );
 	xTaskCreate( vComRxTask, "COMRx", comSTACK_SIZE, NULL, uxPriority, ( TaskHandle_t * ) NULL );
 }
 /*-----------------------------------------------------------*/
@@ -210,6 +210,7 @@ TickType_t xTimeToWait;
 static portTASK_FUNCTION( vComRxTask, pvParameters )
 {
 signed char cExpectedByte, cByteRxed;
+cExpectedByte='A';
 BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 
 	/* Just to stop compiler warnings. */
@@ -219,29 +220,30 @@ BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 	{
 		/* We expect to receive the characters from comFIRST_BYTE to
 		comLAST_BYTE in an incrementing order.  Loop to receive each byte. */
-		for( cExpectedByte = comFIRST_BYTE; cExpectedByte <= comLAST_BYTE; cExpectedByte++ )
-		{
+		//REMOVED:for( cExpectedByte = comFIRST_BYTE; cExpectedByte <= comLAST_BYTE; cExpectedByte++ )
+		//REMOVED:{
 			/* Block on the queue that contains received bytes until a byte is
 			available. */
-			if( xSerialGetChar( xPort, &cByteRxed, comRX_BLOCK_TIME ) )
+			if( xSerialGetChar( xPort, &cByteRxed, comRX_BLOCK_TIME ) == pdTRUE)
 			{
 				/* Was this the byte we were expecting?  If so, toggle the LED,
 				otherwise we are out on sync and should break out of the loop
 				until the expected character sequence is about to restart. */
-				if( cByteRxed == cExpectedByte )
+				//REMOVED: if( cByteRxed == cExpectedByte )
 				{
-					//vParTestToggleLED(  );
+					vParTestToggleLED(  );
+					xSerialPutChar( xPort, cByteRxed, comNO_BLOCK);
 				}
-				else
-				{
-					xResyncRequired = pdTRUE;
-					break; /*lint !e960 Non-switch break allowed. */
-				}
-			}
+				//REMOVED:else
+				//REMOVED:{
+				//REMOVED:	xResyncRequired = pdTRUE;
+				//REMOVED:	break; /*lint !e960 Non-switch break allowed. */
+				//REMOVED:}
+				//REMOVED:}
 		}
 
 		/* Turn the LED off while we are not doing anything. */
-		vParTestSetLED( pdFALSE );
+		//REMOVED:vParTestSetLED( pdFALSE );
 
 		/* Did we break out of the loop because the characters were received in
 		an unexpected order?  If so wait here until the character sequence is

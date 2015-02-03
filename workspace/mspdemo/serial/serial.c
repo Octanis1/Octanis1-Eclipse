@@ -129,10 +129,10 @@ unsigned long ulBaudRateCount;
 		UCA1BR1 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
 		/* UCLISTEN sets loopback mode! */
-		UCA1STAT = UCLISTEN;
+		//UCA1STAT = UCLISTEN;
 
 		/* Enable interrupts. */
-		UCA1IE |= UCRXIE;
+		UCA1IE |= UCRXIE ;
 		
 		/* Take out of reset. */
 		UCA1CTL1 &= ~UCSWRST;
@@ -190,6 +190,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	if( ( UCA1IFG & UCRXIFG ) != 0 )
 	{
+
 		/* Get the character from the UART and post it on the queue of Rxed
 		characters. */
 		cChar = UCA1RXBUF;
