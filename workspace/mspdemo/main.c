@@ -662,7 +662,7 @@ void vApplicationIdleHook( void )
 {
 	/* Called on each iteration of the idle task.  In this case the idle task
 	just enters a low(ish) power mode. */
-	__bis_SR_register( LPM1_bits + GIE );
+	//__bis_SR_register( LPM1_bits + GIE ); //TODO: removed
 }
 /*-----------------------------------------------------------*/
 

@@ -181,12 +181,12 @@ TickType_t xTimeToWait;
 		{
 			if( xSerialPutChar( xPort, cByteToSend, comNO_BLOCK ) == pdPASS )
 			{
-				vParTestToggleLED(  );
+				//vParTestToggleLED(  );
 			}
 		}
 
 		/* Turn the LED off while we are not doing anything. */
-		vParTestSetLED( pdFALSE );
+		//vParTestSetLED( pdFALSE );
 
 		/* We have posted all the characters in the string - wait before
 		re-sending.  Wait a pseudo-random time as this will provide a better
@@ -229,9 +229,10 @@ BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 				/* Was this the byte we were expecting?  If so, toggle the LED,
 				otherwise we are out on sync and should break out of the loop
 				until the expected character sequence is about to restart. */
-				//REMOVED: if( cByteRxed == cExpectedByte )
+				//if( cByteRxed == cExpectedByte )
 				{
-					vParTestToggleLED(  );
+					P4OUT &= ~BIT6;//TODO Remove debug code
+					P4OUT &= ~BIT7;//TODO Remove debug code
 					xSerialPutChar( xPort, cByteRxed, comNO_BLOCK);
 				}
 				//REMOVED:else
@@ -240,7 +241,7 @@ BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 				//REMOVED:	break; /*lint !e960 Non-switch break allowed. */
 				//REMOVED:}
 				//REMOVED:}
-		}
+			}
 
 		/* Turn the LED off while we are not doing anything. */
 		//REMOVED:vParTestSetLED( pdFALSE );
@@ -248,36 +249,36 @@ BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 		/* Did we break out of the loop because the characters were received in
 		an unexpected order?  If so wait here until the character sequence is
 		about to restart. */
-		if( xResyncRequired == pdTRUE )
-		{
-			while( cByteRxed != comLAST_BYTE )
-			{
-				/* Block until the next char is available. */
-				xSerialGetChar( xPort, &cByteRxed, comRX_BLOCK_TIME );
-			}
-
-			/* Note that an error occurred which caused us to have to resync.
-			We use this to stop incrementing the loop counter so
-			sAreComTestTasksStillRunning() will return false - indicating an
-			error. */
-			xErrorOccurred++;
-
-			/* We have now resynced with the Tx task and can continue. */
-			xResyncRequired = pdFALSE;
-		}
-		else
-		{
-			if( xErrorOccurred < comTOTAL_PERMISSIBLE_ERRORS )
-			{
-				/* Increment the count of successful loops.  As error
-				occurring (i.e. an unexpected character being received) will
-				prevent this counter being incremented for the rest of the
-				execution.   Don't worry about mutual exclusion on this
-				variable - it doesn't really matter as we just want it
-				to change. */
-				uxRxLoops++;
-			}
-		}
+//		if( xResyncRequired == pdTRUE )
+//		{
+//			while( cByteRxed != comLAST_BYTE )
+//			{
+//				/* Block until the next char is available. */
+//				xSerialGetChar( xPort, &cByteRxed, comRX_BLOCK_TIME );
+//			}
+//
+//			/* Note that an error occurred which caused us to have to resync.
+//			We use this to stop incrementing the loop counter so
+//			sAreComTestTasksStillRunning() will return false - indicating an
+//			error. */
+//			xErrorOccurred++;
+//
+//			/* We have now resynced with the Tx task and can continue. */
+//			xResyncRequired = pdFALSE;
+//		}
+//		else
+//		{
+//			if( xErrorOccurred < comTOTAL_PERMISSIBLE_ERRORS )
+//			{
+//				/* Increment the count of successful loops.  As error
+//				occurring (i.e. an unexpected character being received) will
+//				prevent this counter being incremented for the rest of the
+//				execution.   Don't worry about mutual exclusion on this
+//				variable - it doesn't really matter as we just want it
+//				to change. */
+//				uxRxLoops++;
+//			}
+//		}
 	}
 } /*lint !e715 !e818 pvParameters is required for a task function even if it is not referenced. */
 /*-----------------------------------------------------------*/

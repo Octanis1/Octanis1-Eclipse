@@ -190,7 +190,6 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	if( ( UCA1IFG & UCRXIFG ) != 0 )
 	{
-
 		/* Get the character from the UART and post it on the queue of Rxed
 		characters. */
 		cChar = UCA1RXBUF;
