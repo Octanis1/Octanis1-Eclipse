@@ -84,6 +84,7 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "task.h"
+#include <signal.h>
 
 /* Demo application includes. */
 #include "serial.h"
@@ -98,6 +99,9 @@ static QueueHandle_t xRxedChars;
 static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
+
+interrupt (USCI_A1_VECTOR) wakeup prvUSCI_A1_ISR( void );
+
 
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
@@ -182,8 +186,10 @@ RAM ring buffer, and synchronise with a task using a semaphore when a complete
 message has been received or transmitted. */
 
 
-#pragma vector=USCI_A1_VECTOR
-__interrupt void prvUSCI_A1_ISR( void )
+//REPLACED: #pragma vector=USCI_A1_VECTOR
+//REPLACED:__interrupt void prvUSCI_A1_ISR( void )
+
+interrupt (USCI_A1_VECTOR) wakeup prvUSCI_A1_ISR( void )
 {
 signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
