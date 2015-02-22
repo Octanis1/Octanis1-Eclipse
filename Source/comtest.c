@@ -125,7 +125,7 @@ don't have to block to send. */
 
 /* The sequence transmitted is from comFIRST_BYTE to and including comLAST_BYTE. */
 #define comFIRST_BYTE				( 'A' )
-#define comLAST_BYTE				( 'X' )
+#define comLAST_BYTE				( 'C' )
 
 #define comBUFFER_LEN				( ( UBaseType_t ) ( comLAST_BYTE - comFIRST_BYTE ) + ( UBaseType_t ) 1 )
 #define comINITIAL_RX_COUNT_VALUE	( 0 )

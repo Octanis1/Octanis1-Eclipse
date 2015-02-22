@@ -119,16 +119,17 @@ volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 					"push	r15						\n\t"	\
 					"mov.w	&usCriticalNesting, r14	\n\t"	\
 					"push	r14						\n\t"	\
-					"mov.w	pxCurrentTCB, r12		\n\t"	\
+					"mov.w	&pxCurrentTCB, r12		\n\t"	\
 					"mov.w	r1, @r12				\n\t"	\
 				);
 
-/*REMOVED from line 120				"mov.w	usCriticalNesting, r14	\n\t"	\
+/*REPLACED from line 120				"mov.w	usCriticalNesting, r14	\n\t"	\
 									"push	r14						\n\t"	\ */
+//ADDED "&" before pxCurrentTCB
 
 
 #define portRESTORE_CONTEXT()								\
-	asm volatile (	"mov.w	pxCurrentTCB, r12		\n\t"	\
+	asm volatile (	"mov.w	&pxCurrentTCB, r12		\n\t"	\
 					"mov.w	@r12, r1				\n\t"	\
 					"pop	r15						\n\t"	\
 					"mov.w	r15, &usCriticalNesting	\n\t"	\
@@ -147,9 +148,9 @@ volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 					"bic	#(0xf0),0(r1)			\n\t"	\
 					"reti							\n\t"	\
 				);
-/*REMOVED from line 130		"pop	r15						\n\t"	\
+/*REPLACED from line 130		"pop	r15						\n\t"	\
 							"mov.w	r15, usCriticalNesting	\n\t"	\
-
+//ADDED "&" before pxCurrentTCB
 
 /*
  * The interrupt service routine used depends on whether the pre-emptive
@@ -222,6 +223,13 @@ void vPortYield( void )
 /*-----------------------------------------------------------*/
 
 
+/*
+ * Sets up the periodic ISR used for the RTOS tick.  This uses timer 0, but
+ * could have alternatively used the watchdog timer or timer 1.
+ */
+void vPortSetupTimerInterrupt( void );
+/*-----------------------------------------------------------*/
+
 BaseType_t xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
@@ -238,12 +246,7 @@ BaseType_t xPortStartScheduler( void )
 
 
 
-/*
- * Sets up the periodic ISR used for the RTOS tick.  This uses timer 0, but
- * could have alternatively used the watchdog timer or timer 1.
- */
-void vPortSetupTimerInterrupt( void );
-/*-----------------------------------------------------------*/
+
 
 /*
  * Initialise the stack of a task to look exactly as if a call to

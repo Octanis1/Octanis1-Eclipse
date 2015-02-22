@@ -32,7 +32,8 @@ unsigned char halButtonsPressed(void)
 {
 //  unsigned char value;
 //  value = BUTTON_PORT_IN;
-//  return (0xFF - value);                    //Low==ButtonPressed
+//REMOVED  return (0xFF - value);                    //Low==ButtonPressed
+	return 0xFF;                    //Low==ButtonPressed
 }
 
 /**********************************************************************//**

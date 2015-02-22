@@ -185,8 +185,8 @@ to send messages from tasks and interrupts the the LCD task. */
 
 /* Priorities used by the test and demo tasks. */
 #define mainLED_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
-#define mainLCD_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
-#define mainCOM_TEST_PRIORITY			( tskIDLE_PRIORITY + 2 )
+#define mainLCD_TASK_PRIORITY			( tskIDLE_PRIORITY + 2 )
+#define mainCOM_TEST_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainGENERIC_QUEUE_TEST_PRIORITY	( tskIDLE_PRIORITY )
 
 /* The LED used by the comtest tasks. See the comtest.c file for more
@@ -280,7 +280,7 @@ int main( void )
 	prvSetupHardware();
 	vParTestInitialise();
 	/* Start the standard demo application tasks. */
-	//vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
+	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 
 
 //	/* Create the queue used by tasks and interrupts to send strings to the LCD
