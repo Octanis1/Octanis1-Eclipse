@@ -22,6 +22,6 @@ in order to use MSP-EXP430F5438 HAL.
 //#include "hal_rf.h"
 //#include "hal_rtc.h"
 //#include "hal_tlv.h"
-#include "hal_pmm.h"
+#include "HAL_PMM.h"
 
 #endif /* HAL_MSP_EXP430F5438_H */
