@@ -224,6 +224,7 @@ BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 		//REMOVED:{
 			/* Block on the queue that contains received bytes until a byte is
 			available. */
+
 			if( xSerialGetChar( xPort, &cByteRxed, comRX_BLOCK_TIME ) == pdTRUE)
 			{
 				/* Was this the byte we were expecting?  If so, toggle the LED,
@@ -231,8 +232,8 @@ BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 				until the expected character sequence is about to restart. */
 				//if( cByteRxed == cExpectedByte )
 				{
-					P4OUT &= ~BIT6;//TODO Remove debug code
-					P4OUT &= ~BIT7;//TODO Remove debug code
+					//P4OUT &= ~BIT6;//TODO Remove debug code
+					P4OUT |= BIT7;//TODO Remove debug code
 					xSerialPutChar( xPort, cByteRxed, comNO_BLOCK);
 				}
 				//REMOVED:else

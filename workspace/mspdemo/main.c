@@ -280,7 +280,7 @@ int main( void )
 	prvSetupHardware();
 	vParTestInitialise();
 	/* Start the standard demo application tasks. */
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
+	//vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 
 
 //	/* Create the queue used by tasks and interrupts to send strings to the LCD

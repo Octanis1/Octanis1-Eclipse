@@ -151,6 +151,7 @@ unsigned long ulBaudRateCount;
 
 signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
+
 	/* Get the next character from the buffer.  Return false if no characters
 	are available, or arrive before xBlockTime expires. */
 	if( xQueueReceive( xRxedChars, pcRxedChar, xBlockTime ) )
@@ -159,6 +160,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 	}
 	else
 	{
+		P4OUT |= BIT7;//TODO Remove debug code
 		return pdFALSE;
 	}
 }

@@ -145,54 +145,17 @@ volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 					"pop	r6						\n\t"	\
 					"pop	r5						\n\t"	\
 					"pop	r4						\n\t"	\
-					"bic	#(0xf0),0(r1)			\n\t"	\
+					"pop	r2						\n\t"	\
 					"reti							\n\t"	\
 				);
+//TODO: line before reti: removed "bic	#(0xf0),0(r1)			\n\t"	\
+						  replaced by "pop r2"
+
 /*REPLACED from line 130		"pop	r15						\n\t"	\
 							"mov.w	r15, usCriticalNesting	\n\t"	\
 //ADDED "&" before pxCurrentTCB
 
-/*
- * The interrupt service routine used depends on whether the pre-emptive
- * scheduler is being used or not.
- */
-#if configUSE_PREEMPTION == 1
 
-	/*
-	 * Tick ISR for preemptive scheduler.  We can use a naked attribute as
-	 * the context is saved at the start of vPortYieldFromTick().  The tick
-	 * count is incremented after the context is saved.
-	 */
-interrupt (TIMER0_A0_VECTOR) vPortTickISR( void ) __attribute__ ( ( naked ) );
-interrupt (TIMER0_A0_VECTOR) vPortTickISR( void )
-	{
-		/* Save the context of the interrupted task. */
-		portSAVE_CONTEXT();
-
-		/* Increment the tick count then switch to the highest priority task
-		that is ready to run. */
-		if( xTaskIncrementTick() != pdFALSE )
-		{
-			vTaskSwitchContext();
-		}
-
-		/* Restore the context of the new task. */
-		portRESTORE_CONTEXT();
-	}
-
-#else
-
-	/*
-	 * Tick ISR for the cooperative scheduler.  All this does is increment the
-	 * tick count.  We don't need to switch context, this can only be done by
-	 * manual calls to taskYIELD();
-	 */
-interrupt (TIMER0_A0_VECTOR) prvTickISR( void ) __attribute__ ( ( naked ) );
-interrupt (TIMER0_A0_VECTOR) prvTickISR( void )
-	{
-		xTaskIncrementTick();
-	}
-#endif
 
 
 
@@ -379,4 +342,51 @@ extern void vPortTickISR( void );
 }
  *
  */
+
+/*
+ * The interrupt service routine used depends on whether the pre-emptive
+ * scheduler is being used or not.
+ */
+#if configUSE_PREEMPTION == 1
+
+	/*
+	 * Tick ISR for preemptive scheduler.  We can use a naked attribute as
+	 * the context is saved at the start of vPortYieldFromTick().  The tick
+	 * count is incremented after the context is saved.
+	 */
+interrupt (TIMER0_A0_VECTOR) vPortTickISR( void ) __attribute__ ( ( naked ) );
+interrupt (TIMER0_A0_VECTOR) vPortTickISR( void )
+	{
+		__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF ); //TODO: added this according to the above defined function (MSP430X port)
+
+		asm volatile("push   r2 "); //TODO: this was added according to portext.asm
+
+
+		/* Save the context of the interrupted task. */
+		portSAVE_CONTEXT();
+
+		/* Increment the tick count then switch to the highest priority task
+		that is ready to run. */
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			vTaskSwitchContext();
+		}
+
+		/* Restore the context of the new task. */
+		portRESTORE_CONTEXT();
+	}
+
+#else
+
+	/*
+	 * Tick ISR for the cooperative scheduler.  All this does is increment the
+	 * tick count.  We don't need to switch context, this can only be done by
+	 * manual calls to taskYIELD();
+	 */
+interrupt (TIMER0_A0_VECTOR) prvTickISR( void ) __attribute__ ( ( naked ) );
+interrupt (TIMER0_A0_VECTOR) prvTickISR( void )
+	{
+		xTaskIncrementTick();
+	}
+#endif
 	

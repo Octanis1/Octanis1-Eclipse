@@ -109,7 +109,7 @@ void vParTestInitialise( void )
 	P4SEL &= ~(LED_VDD + LED_PIN);
 	P4DIR |= (LED_VDD + LED_PIN); //the LED annode and cathode
 
-	P4OUT |= BIT7; //write a one to led
+	P4OUT &= ~BIT7; //write a one to led
 }
 
 /*-----------------------------------------------------------*/
